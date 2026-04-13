@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIV Medicine — European Reviewer Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #0c1829;
+  --navy2:   #132035;
+  --navy3:   #1a2d4a;
+  --navy4:   #243a5e;
+  --cream:   #f8f7f3;
+  --cream2:  #f0ede6;
+  --cream3:  #e8e3d8;
+  --crimson: #b91c1c;
+  --crimson2:#991b1b;
+  --gold:    #c9a84c;
+  --text:    #1c1917;
+  --text2:   #44403c;
+  --text3:   #78716c;
+  --border:  #d6d0c4;
+  --sidebar: 280px;
+  --topbar:  48px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: var(--cream);
+  color: var(--text);
+}
+
+/* ─── DESKTOP: side-by-side ─────────────────────────── */
+@media (min-width: 769px) {
+  body { display: flex; height: 100vh; overflow: hidden; }
+  #sidebar {
+    width: var(--sidebar);
+    min-width: var(--sidebar);
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #mobile-topbar { display: none; }
+  #drawer-overlay { display: none !important; }
+  #filter-drawer { display: none !important; }
+  #scroll-area { flex: 1; overflow-y: auto; overflow-x: auto; }
+  #topbar { display: flex; }
+  #sidebar-bottom { margin-top: auto; }
+}
+
+/* ─── MOBILE: stacked ───────────────────────────────── */
+@media (max-width: 768px) {
+  body { display: block; height: 100%; overflow: hidden; }
+  #sidebar { display: none; }
+  #main { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  #topbar { display: none; }
+
+  /* mobile top bar */
+  #mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--navy);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+  #mobile-topbar h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: .95rem;
+    color: #fff;
+    flex: 1;
+    line-height: 1.2;
+  }
+  #mobile-topbar .journal-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: .55rem;
+    color: var(--gold);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    display: block;
+  }
+  .mob-btn {
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .06em;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background .15s;
+  }
+  #filterBtn {
+    background: var(--navy3);
+    color: rgba(255,255,255,.8);
+    border: 1px solid var(--navy4);
+  }
+  #filterBtn.has-filters { background: var(--crimson); color: #fff; border-color: var(--crimson2); }
+  #viewToggleBtn {
+    background: var(--navy3);
+    color: rgba(255,255,255,.6);
+    border: 1px solid var(--navy4);
+  }
+
+  /* mobile stats strip */
+  #mobile-stats {
+    display: flex;
+    background: var(--navy2);
+    border-bottom: 1px solid var(--navy3);
+    flex-shrink: 0;
+  }
+  .mob-stat {
+    flex: 1;
+    padding: 8px 4px;
+    text-align: center;
+    border-right: 1px solid var(--navy3);
+  }
+  .mob-stat:last-child { border-right: none; }
+  .mob-stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: #fff;
+    line-height: 1;
+  }
+  .mob-stat-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: .5rem;
+    color: rgba(255,255,255,.35);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    margin-top: 1px;
+  }
+
+  /* mobile search bar */
+  #mobile-search {
+    padding: 10px 14px;
+    background: var(--cream2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  #mobile-search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: .8rem;
+    color: var(--text);
+    outline: none;
+  }
+  #mobile-search input:focus { border-color: var(--crimson); }
+
+  /* sort strip */
+  #mobile-sort {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 14px;
+    background: var(--cream2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    scrollbar-width: none;
+  }
+  #mobile-sort::-webkit-scrollbar { display: none; }
+  .mob-sort-btn {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Mono', monospace;
+    font-size: .65rem;
+    color: var(--text3);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .12s, border-color .12s;
+    flex-shrink: 0;
+  }
+  .mob-sort-btn.sorted { color: var(--crimson); border-bottom-color: var(--crimson); }
+
+  /* scroll area */
+  #scroll-area { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
+  /* drawer overlay */
+  #drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+  #drawer-overlay.visible { opacity: 1; pointer-events: all; }
+
+  /* filter drawer — slides up from bottom */
+  #filter-drawer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--navy);
+    border-radius: 16px 16px 0 0;
+    z-index: 101;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.32,.72,0,1);
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #filter-drawer.open { transform: translateY(0); }
+  .drawer-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,.2);
+    border-radius: 2px;
+    margin: 12px auto 8px;
+    flex-shrink: 0;
+  }
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 20px 14px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--navy3);
+  }
+  .drawer-header h2 {
+    font-family: 'DM Serif Display', serif;
+    color: #fff;
+    font-size: 1.1rem;
+  }
+  .drawer-close {
+    background: var(--navy3);
+    border: none;
+    color: rgba(255,255,255,.6);
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .drawer-scroll { overflow-y: auto; padding: 16px 20px 32px; flex: 1; }
+  .drawer-section { margin-bottom: 20px; }
+  .drawer-label {
+    font-family: 'DM Mono', monospace;
+    font-size: .6rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .drawer-select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--navy3);
+    border: 1px solid var(--navy4);
+    border-radius: 8px;
+    color: rgba(255,255,255,.85);
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  .drawer-select.active { border-color: var(--gold); }
+  .drawer-select option { background: var(--navy2); }
+
+  /* country grid in drawer */
+  .country-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .country-grid .country-bar-row {
+    background: var(--navy3);
+    border-radius: 6px;
+    padding: 7px 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .12s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .country-grid .country-bar-row.active {
+    border-color: var(--gold);
+    background: var(--navy4);
+  }
+  .country-grid .country-track, .country-grid .country-count { display: none; }
+  .country-grid .country-name {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: rgba(255,255,255,.65);
+  }
+  .country-grid .country-bar-row.active .country-name { color: #fff; }
+  .drawer-reset {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--navy4);
+    border-radius: 8px;
+    color: rgba(255,255,255,.35);
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: all .15s;
+  }
+  .drawer-reset:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* mobile cards */
+  #cardGrid { padding: 12px 14px 80px; gap: 10px; }
+  .card { padding: 14px 16px; }
+
+  /* mobile table → simplified */
+  #mainTable { font-size: .8rem; }
+  #mainTable thead th { padding: 8px 10px; font-size: .58rem; }
+  #mainTable tbody td { padding: 8px 10px; }
+
+  /* hide less important columns on mobile */
+  .col-fname, .col-journals, .col-conf, .col-exp { display: none; }
+  .col-institution { max-width: 110px; font-size: .7rem; }
+}
+
+/* ─── SHARED SIDEBAR STYLES ─────────────────────────── */
+#sidebar {
+  background: var(--navy);
+  scrollbar-width: thin;
+  scrollbar-color: var(--navy3) transparent;
+}
+#sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--navy3);
+  flex-shrink: 0;
+}
+.sidebar-journal {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+#sidebar-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+.sidebar-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .06em;
+}
+#sidebar-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--navy3);
+  border-top: 1px solid var(--navy3);
+  border-bottom: 1px solid var(--navy3);
+  flex-shrink: 0;
+}
+.stat-box {
+  background: var(--navy2);
+  padding: 14px 16px;
+  transition: background .15s;
+}
+.stat-box:hover { background: var(--navy3); }
+.stat-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: .55rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+}
+#sidebar-search { padding: 16px 16px 0; flex-shrink: 0; }
+.s-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  margin-bottom: 6px;
+  display: block;
+}
+#searchInput {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--navy3);
+  border: 1px solid var(--navy4);
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  outline: none;
+  transition: border-color .15s, background .15s;
+}
+#searchInput::placeholder { color: rgba(255,255,255,.25); }
+#searchInput:focus { border-color: var(--gold); background: var(--navy4); }
+.filter-section { padding: 14px 16px 0; flex-shrink: 0; }
+.filter-select {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--navy3);
+  border: 1px solid var(--navy4);
+  border-radius: 6px;
+  color: rgba(255,255,255,.8);
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color .15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+.filter-select:focus { border-color: var(--gold); }
+.filter-select option { background: var(--navy2); color: #fff; }
+.filter-select.active { border-color: var(--gold); color: #fff; }
+#country-breakdown { padding: 14px 16px 0; flex-shrink: 0; }
+.country-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background .12s;
+}
+.country-bar-row:hover { background: var(--navy3); }
+.country-bar-row.active { background: var(--navy4); }
+.country-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.country-name {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  color: rgba(255,255,255,.55);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.country-bar-row.active .country-name { color: rgba(255,255,255,.9); }
+.country-track { width: 52px; height: 3px; background: var(--navy4); border-radius: 2px; flex-shrink: 0; }
+.country-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.country-count {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  color: rgba(255,255,255,.3);
+  width: 18px;
+  text-align: right;
+  flex-shrink: 0;
+}
+#sidebar-bottom { padding: 14px 16px 20px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.view-toggle { display: flex; gap: 4px; }
+.vbtn {
+  flex: 1;
+  padding: 7px;
+  background: var(--navy3);
+  border: 1px solid var(--navy4);
+  border-radius: 5px;
+  color: rgba(255,255,255,.4);
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.vbtn.active { background: var(--crimson); border-color: var(--crimson2); color: #fff; }
+.vbtn:not(.active):hover { background: var(--navy4); color: rgba(255,255,255,.7); }
+#resultCount {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  color: rgba(255,255,255,.25);
+  text-align: center;
+  letter-spacing: .06em;
+}
+#resetBtn {
+  width: 100%;
+  padding: 7px;
+  background: transparent;
+  border: 1px solid var(--navy4);
+  border-radius: 5px;
+  color: rgba(255,255,255,.25);
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .15s;
+  display: none;
+}
+#resetBtn.visible { display: block; }
+#resetBtn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ─── TOPBAR (desktop) ──────────────────────────────── */
+#topbar {
+  background: var(--cream);
+  border-bottom: 2px solid var(--navy);
+  padding: 0 32px;
+  align-items: center;
+  flex-shrink: 0;
+  height: var(--topbar);
+}
+.sort-btn {
+  padding: 0 16px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color .12s, background .12s;
+  white-space: nowrap;
+}
+.sort-btn:hover { color: var(--text); background: var(--cream2); }
+.sort-btn.sorted { color: var(--crimson); font-weight: 500; }
+.sort-btn .arr { font-size: .7rem; opacity: .6; }
+.sort-btn.sorted .arr { opacity: 1; }
+.topbar-right {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  color: var(--text3);
+  padding-left: 16px;
+  border-left: 1px solid var(--border);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* ─── TABLE ─────────────────────────────────────────── */
+#mainTable { width: 100%; border-collapse: collapse; font-size: .82rem; }
+#mainTable thead { position: sticky; top: 0; z-index: 10; background: var(--cream2); }
+#mainTable thead tr { border-bottom: 2px solid var(--navy); }
+#mainTable thead th {
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  font-weight: 500;
+  white-space: nowrap;
+}
+#mainTable tbody tr {
+  border-bottom: 1px solid var(--cream3);
+  transition: background .1s;
+  animation: fadeIn .2s ease forwards;
+}
+#mainTable tbody tr:hover { background: rgba(185,28,28,.04); }
+@keyframes fadeIn { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:translateY(0); } }
+#mainTable tbody td { padding: 10px 14px; vertical-align: middle; }
+.td-num { font-family:'DM Mono',monospace; font-size:.62rem; color:var(--text3); text-align:right; padding-right:8px !important; width:32px; }
+.td-lname { font-family:'DM Serif Display',serif; font-size:.92rem; color:var(--text); white-space:nowrap; }
+.td-fname { font-size:.78rem; color:var(--text2); white-space:nowrap; }
+.cbadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: .03em;
+}
+.ttag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 1px;
+  white-space: nowrap;
+}
+.jtag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  margin: 1px;
+  white-space: nowrap;
+}
+.jtag-l { background:#fff3e0; color:#9a3412; border:1px solid #fed7aa; }
+.jtag-h { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+.jtag-c { background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; }
+.ctag {
+  display: inline-block;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: .57rem;
+  margin: 1px;
+  white-space: nowrap;
+}
+.hval { font-family:'DM Serif Display',serif; font-size:1.05rem; color:var(--crimson); }
+.pval { font-family:'DM Mono',monospace; font-size:.8rem; color:var(--text2); font-weight:500; }
+.exp-cell { font-size:.76rem; color:var(--text2); line-height:1.45; max-width:240px; }
+.empty-cell { color:var(--border); font-family:'DM Mono',monospace; font-size:.7rem; }
+
+/* ─── CARDS ─────────────────────────────────────────── */
+#cardGrid {
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  padding: 24px 32px 48px;
+}
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+  border-top: 3px solid var(--border);
+  transition: box-shadow .2s, transform .15s;
+  animation: fadeIn .25s ease forwards;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); transform: translateY(-2px); }
+.card-lname { font-family:'DM Serif Display',serif; font-size:1.05rem; color:var(--text); margin-bottom:1px; }
+.card-fname { font-size:.78rem; color:var(--text3); margin-bottom:8px; }
+.card-inst { font-size:.74rem; color:var(--text2); margin-bottom:10px; line-height:1.4; }
+.card-tags { display:flex; flex-wrap:wrap; gap:3px; margin-bottom:8px; }
+.card-bottom { display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px; padding-top:10px; border-top:1px solid var(--cream3); }
+.card-stat { display:flex; flex-direction:column; }
+.card-stat-num { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--crimson); line-height:1; }
+.card-stat-lbl { font-family:'DM Mono',monospace; font-size:.55rem; color:var(--text3); text-transform:uppercase; letter-spacing:.08em; margin-top:2px; }
+.card-exp { font-size:.72rem; color:var(--text3); line-height:1.45; margin-top:8px; }
+
+#noResults { display:none; padding:80px 32px; text-align:center; font-family:'DM Mono',monospace; font-size:.85rem; color:var(--text3); letter-spacing:.05em; }
+#noResults span { display:block; font-size:2rem; margin-bottom:12px; opacity:.3; }
+
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--cream3); border-radius:3px; }
+#sidebar::-webkit-scrollbar-thumb { background:var(--navy3); }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR (desktop only) ═══ -->
+<aside id="sidebar">
+  <div id="sidebar-header">
+    <div class="sidebar-journal">HIV Medicine</div>
+    <h1>European Reviewer Database</h1>
+    <div class="sidebar-sub">2024–2025 · 6 sources · 23 countries</div>
+  </div>
+  <div id="sidebar-stats">
+    <div class="stat-box"><div class="stat-val" id="stat-n">178</div><div class="stat-lbl">Researchers</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-c">23</div><div class="stat-lbl">Countries</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-p">—</div><div class="stat-lbl">Articles</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-h">—</div><div class="stat-lbl">Avg H-Index</div></div>
+  </div>
+  <div id="sidebar-search">
+    <span class="s-label">Search</span>
+    <input type="text" id="searchInput" placeholder="Name, institution, expertise…" oninput="applyFilters()">
+  </div>
+  <div class="filter-section">
+    <span class="s-label">Topic</span>
+    <select id="topicFilter" class="filter-select" onchange="applyFilters()">
+      <option value="">All Topics</option>
+<option value="ART & Treatment">ART & Treatment (45)</option>
+<option value="Cohort Studies & Epidemiology">Cohort Studies & Epidemiology (51)</option>
+<option value="Prevention, PrEP & Sexual Health">Prevention, PrEP & Sexual Health (23)</option>
+<option value="Drug Resistance & Virology">Drug Resistance & Virology (17)</option>
+<option value="Cardiovascular & Metabolic">Cardiovascular & Metabolic (21)</option>
+<option value="Women, Gender & Pregnancy">Women, Gender & Pregnancy (15)</option>
+<option value="Liver & Hepatitis Coinfection">Liver & Hepatitis Coinfection (12)</option>
+<option value="Stigma, Equity & Access">Stigma, Equity & Access (15)</option>
+<option value="Pharmacology & Drug Interactions">Pharmacology & Drug Interactions (8)</option>
+<option value="Comorbidities, Ageing & Renal">Comorbidities, Ageing & Renal (13)</option>
+<option value="Neurology & Mental Health">Neurology & Mental Health (7)</option>
+<option value="Opportunistic Infections & TB">Opportunistic Infections & TB (45)</option>
+<option value="HIV Cure & Immunology">HIV Cure & Immunology (5)</option>
+<option value="Modelling & Biostatistics">Modelling & Biostatistics (8)</option>
+<option value="Paediatric & Adolescent HIV">Paediatric & Adolescent HIV (3)</option>
+    </select>
+  </div>
+  <div class="filter-section">
+    <span class="s-label">Journal</span>
+    <select id="journalFilter" class="filter-select" onchange="applyFilters()">
+      <option value="">All Journals</option>
+      <option value="HIV Medicine">HIV Medicine</option>
+      <option value="Lancet HIV">Lancet HIV</option>
+      <option value="Clinical Infectious Diseases">Clinical Infectious Diseases</option>
+    </select>
+  </div>
+  <div class="filter-section">
+    <span class="s-label">Conference</span>
+    <select id="confFilter" class="filter-select" onchange="applyFilters()">
+      <option value="">All Conferences</option>
+      <option value="Glasgow 2024">HIV Glasgow 2024</option>
+      <option value="EACS 2023">EACS 2023</option>
+      <option value="EACS 2025">EACS 2025</option>
+      <option value="IAS 2024">IAS 2024</option>
+      <option value="CROI 2024">CROI 2024</option>
+    </select>
+  </div>
+  <div class="filter-section" style="padding-bottom:8px">
+    <span class="s-label">Country</span>
+    <div id="country-breakdown">
+<div class="country-bar-row" onclick="toggleCountry('UK')" id="crow-UK"><span class="country-dot" style="background:#ef4444"></span><span class="country-name">UK</span><div class="country-track"><div class="country-fill" style="width:100%;background:#ef4444"></div></div><span class="country-count">30</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Switzerland')" id="crow-Switzerland"><span class="country-dot" style="background:#06b6d4"></span><span class="country-name">Switzerland</span><div class="country-track"><div class="country-fill" style="width:76%;background:#06b6d4"></div></div><span class="country-count">23</span></div>
+<div class="country-bar-row" onclick="toggleCountry('France')" id="crow-France"><span class="country-dot" style="background:#3b82f6"></span><span class="country-name">France</span><div class="country-track"><div class="country-fill" style="width:73%;background:#3b82f6"></div></div><span class="country-count">22</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Spain')" id="crow-Spain"><span class="country-dot" style="background:#f59e0b"></span><span class="country-name">Spain</span><div class="country-track"><div class="country-fill" style="width:70%;background:#f59e0b"></div></div><span class="country-count">21</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Italy')" id="crow-Italy"><span class="country-dot" style="background:#22c55e"></span><span class="country-name">Italy</span><div class="country-track"><div class="country-fill" style="width:43%;background:#22c55e"></div></div><span class="country-count">13</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Germany')" id="crow-Germany"><span class="country-dot" style="background:#eab308"></span><span class="country-name">Germany</span><div class="country-track"><div class="country-fill" style="width:40%;background:#eab308"></div></div><span class="country-count">12</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Denmark')" id="crow-Denmark"><span class="country-dot" style="background:#f97316"></span><span class="country-name">Denmark</span><div class="country-track"><div class="country-fill" style="width:36%;background:#f97316"></div></div><span class="country-count">11</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Netherlands')" id="crow-Netherlands"><span class="country-dot" style="background:#10b981"></span><span class="country-name">Netherlands</span><div class="country-track"><div class="country-fill" style="width:26%;background:#10b981"></div></div><span class="country-count">8</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Belgium')" id="crow-Belgium"><span class="country-dot" style="background:#a78bfa"></span><span class="country-name">Belgium</span><div class="country-track"><div class="country-fill" style="width:16%;background:#a78bfa"></div></div><span class="country-count">5</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Poland')" id="crow-Poland"><span class="country-dot" style="background:#6366f1"></span><span class="country-name">Poland</span><div class="country-track"><div class="country-fill" style="width:16%;background:#6366f1"></div></div><span class="country-count">5</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Greece')" id="crow-Greece"><span class="country-dot" style="background:#f472b6"></span><span class="country-name">Greece</span><div class="country-track"><div class="country-fill" style="width:16%;background:#f472b6"></div></div><span class="country-count">5</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Portugal')" id="crow-Portugal"><span class="country-dot" style="background:#0ea5e9"></span><span class="country-name">Portugal</span><div class="country-track"><div class="country-fill" style="width:10%;background:#0ea5e9"></div></div><span class="country-count">3</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Romania')" id="crow-Romania"><span class="country-dot" style="background:#ec4899"></span><span class="country-name">Romania</span><div class="country-track"><div class="country-fill" style="width:10%;background:#ec4899"></div></div><span class="country-count">3</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Ireland')" id="crow-Ireland"><span class="country-dot" style="background:#34d399"></span><span class="country-name">Ireland</span><div class="country-track"><div class="country-fill" style="width:10%;background:#34d399"></div></div><span class="country-count">3</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Sweden')" id="crow-Sweden"><span class="country-dot" style="background:#8b5cf6"></span><span class="country-name">Sweden</span><div class="country-track"><div class="country-fill" style="width:6%;background:#8b5cf6"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Austria')" id="crow-Austria"><span class="country-dot" style="background:#84cc16"></span><span class="country-name">Austria</span><div class="country-track"><div class="country-fill" style="width:6%;background:#84cc16"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Norway')" id="crow-Norway"><span class="country-dot" style="background:#4ade80"></span><span class="country-name">Norway</span><div class="country-track"><div class="country-fill" style="width:6%;background:#4ade80"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Turkey')" id="crow-Turkey"><span class="country-dot" style="background:#f43f5e"></span><span class="country-name">Turkey</span><div class="country-track"><div class="country-fill" style="width:6%;background:#f43f5e"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Spain/France')" id="crow-Spain_France"><span class="country-dot" style="background:#888"></span><span class="country-name">Spain/France</span><div class="country-track"><div class="country-fill" style="width:3%;background:#888"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Slovenia')" id="crow-Slovenia"><span class="country-dot" style="background:#c084fc"></span><span class="country-name">Slovenia</span><div class="country-track"><div class="country-fill" style="width:3%;background:#c084fc"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Croatia')" id="crow-Croatia"><span class="country-dot" style="background:#fb923c"></span><span class="country-name">Croatia</span><div class="country-track"><div class="country-fill" style="width:3%;background:#fb923c"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Hungary')" id="crow-Hungary"><span class="country-dot" style="background:#fbbf24"></span><span class="country-name">Hungary</span><div class="country-track"><div class="country-fill" style="width:3%;background:#fbbf24"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Georgia')" id="crow-Georgia"><span class="country-dot" style="background:#2dd4bf"></span><span class="country-name">Georgia</span><div class="country-track"><div class="country-fill" style="width:3%;background:#2dd4bf"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Israel')" id="crow-Israel"><span class="country-dot" style="background:#818cf8"></span><span class="country-name">Israel</span><div class="country-track"><div class="country-fill" style="width:3%;background:#818cf8"></div></div><span class="country-count">1</span></div>
+    </div>
+  </div>
+  <div id="sidebar-bottom">
+    <div class="view-toggle">
+      <button class="vbtn active" id="btnTable" onclick="setView('table')">Table</button>
+      <button class="vbtn" id="btnCard" onclick="setView('card')">Cards</button>
+    </div>
+    <button id="resetBtn" onclick="resetFilters()">Reset all filters</button>
+    <div id="resultCount"></div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main id="main">
+
+  <!-- Mobile top bar -->
+  <div id="mobile-topbar">
+    <div style="flex:1;min-width:0">
+      <span class="journal-tag">HIV Medicine</span>
+      <h1>Reviewer Database</h1>
+    </div>
+    <button class="mob-btn" id="viewToggleBtn" onclick="toggleMobileView()">Cards</button>
+    <button class="mob-btn" id="filterBtn" onclick="openDrawer()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Filters
+    </button>
+  </div>
+
+  <!-- Mobile stats -->
+  <div id="mobile-stats">
+    <div class="mob-stat"><div class="mob-stat-num" id="mob-stat-n">178</div><div class="mob-stat-lbl">Total</div></div>
+    <div class="mob-stat"><div class="mob-stat-num" id="mob-stat-c">23</div><div class="mob-stat-lbl">Countries</div></div>
+    <div class="mob-stat"><div class="mob-stat-num" id="mob-stat-p">—</div><div class="mob-stat-lbl">Articles</div></div>
+    <div class="mob-stat"><div class="mob-stat-num" id="mob-stat-h">—</div><div class="mob-stat-lbl">Avg H</div></div>
+  </div>
+
+  <!-- Mobile search -->
+  <div id="mobile-search">
+    <input type="text" id="mobileSearchInput" placeholder="Search name, institution, expertise…" oninput="syncSearch(this.value)">
+  </div>
+
+  <!-- Mobile sort strip -->
+  <div id="mobile-sort">
+    <button class="mob-sort-btn sorted" id="msort-last_name" onclick="setSortCol('last_name')">Last Name ↓</button>
+    <button class="mob-sort-btn" id="msort-country" onclick="setSortCol('country')">Country ↕</button>
+    <button class="mob-sort-btn" id="msort-h_index" onclick="setSortCol('h_index')">H-Index ↕</button>
+    <button class="mob-sort-btn" id="msort-pub_count" onclick="setSortCol('pub_count')">Articles ↕</button>
+  </div>
+
+  <!-- Desktop topbar -->
+  <div id="topbar">
+    <button class="sort-btn sorted" id="th-last_name" onclick="setSortCol('last_name')">Last Name <span class="arr">↓</span></button>
+    <button class="sort-btn" id="th-country" onclick="setSortCol('country')">Country <span class="arr">↕</span></button>
+    <button class="sort-btn" id="th-h_index" onclick="setSortCol('h_index')">H-Index <span class="arr">↕</span></button>
+    <button class="sort-btn" id="th-pub_count" onclick="setSortCol('pub_count')">Articles <span class="arr">↕</span></button>
+    <div class="topbar-right" id="topbar-active"></div>
+  </div>
+
+  <!-- Scroll area -->
+  <div id="scroll-area">
+    <table id="mainTable">
+      <thead><tr>
+        <th style="width:32px">#</th>
+        <th>Last Name</th>
+        <th class="col-fname">First Name</th>
+        <th>Country</th>
+        <th class="col-institution">Institution</th>
+        <th>Topics</th>
+        <th class="col-journals">Journals</th>
+        <th style="text-align:center">Art.</th>
+        <th style="text-align:center">H</th>
+        <th class="col-conf">Conferences</th>
+        <th class="col-exp">Research Focus</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="noResults"><span>∅</span>No researchers match your filters.</div>
+    <div id="cardGrid"></div>
+  </div>
+
+</main>
+
+<!-- ═══ MOBILE FILTER DRAWER ═══ -->
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="filter-drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-header">
+    <h2>Filters</h2>
+    <button class="drawer-close" onclick="closeDrawer()">Done</button>
+  </div>
+  <div class="drawer-scroll">
+    <div class="drawer-section">
+      <span class="drawer-label">Topic</span>
+      <select id="drawerTopicFilter" class="drawer-select" onchange="syncDrawerFilter('topicFilter','drawerTopicFilter')">
+        <option value="">All Topics</option>
+<option value="ART & Treatment">ART & Treatment (45)</option>
+<option value="Cohort Studies & Epidemiology">Cohort Studies & Epidemiology (51)</option>
+<option value="Prevention, PrEP & Sexual Health">Prevention, PrEP & Sexual Health (23)</option>
+<option value="Drug Resistance & Virology">Drug Resistance & Virology (17)</option>
+<option value="Cardiovascular & Metabolic">Cardiovascular & Metabolic (21)</option>
+<option value="Women, Gender & Pregnancy">Women, Gender & Pregnancy (15)</option>
+<option value="Liver & Hepatitis Coinfection">Liver & Hepatitis Coinfection (12)</option>
+<option value="Stigma, Equity & Access">Stigma, Equity & Access (15)</option>
+<option value="Pharmacology & Drug Interactions">Pharmacology & Drug Interactions (8)</option>
+<option value="Comorbidities, Ageing & Renal">Comorbidities, Ageing & Renal (13)</option>
+<option value="Neurology & Mental Health">Neurology & Mental Health (7)</option>
+<option value="Opportunistic Infections & TB">Opportunistic Infections & TB (45)</option>
+<option value="HIV Cure & Immunology">HIV Cure & Immunology (5)</option>
+<option value="Modelling & Biostatistics">Modelling & Biostatistics (8)</option>
+<option value="Paediatric & Adolescent HIV">Paediatric & Adolescent HIV (3)</option>
+      </select>
+    </div>
+    <div class="drawer-section">
+      <span class="drawer-label">Journal</span>
+      <select id="drawerJournalFilter" class="drawer-select" onchange="syncDrawerFilter('journalFilter','drawerJournalFilter')">
+        <option value="">All Journals</option>
+        <option value="HIV Medicine">HIV Medicine</option>
+        <option value="Lancet HIV">Lancet HIV</option>
+        <option value="Clinical Infectious Diseases">Clinical Infectious Diseases</option>
+      </select>
+    </div>
+    <div class="drawer-section">
+      <span class="drawer-label">Conference</span>
+      <select id="drawerConfFilter" class="drawer-select" onchange="syncDrawerFilter('confFilter','drawerConfFilter')">
+        <option value="">All Conferences</option>
+        <option value="Glasgow 2024">HIV Glasgow 2024</option>
+        <option value="EACS 2023">EACS 2023</option>
+        <option value="EACS 2025">EACS 2025</option>
+        <option value="IAS 2024">IAS 2024</option>
+        <option value="CROI 2024">CROI 2024</option>
+      </select>
+    </div>
+    <div class="drawer-section">
+      <span class="drawer-label">Country</span>
+      <div class="country-grid" id="drawer-country-grid">
+<div class="country-bar-row" onclick="toggleCountry('UK')" id="crow-UK"><span class="country-dot" style="background:#ef4444"></span><span class="country-name">UK</span><div class="country-track"><div class="country-fill" style="width:100%;background:#ef4444"></div></div><span class="country-count">30</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Switzerland')" id="crow-Switzerland"><span class="country-dot" style="background:#06b6d4"></span><span class="country-name">Switzerland</span><div class="country-track"><div class="country-fill" style="width:76%;background:#06b6d4"></div></div><span class="country-count">23</span></div>
+<div class="country-bar-row" onclick="toggleCountry('France')" id="crow-France"><span class="country-dot" style="background:#3b82f6"></span><span class="country-name">France</span><div class="country-track"><div class="country-fill" style="width:73%;background:#3b82f6"></div></div><span class="country-count">22</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Spain')" id="crow-Spain"><span class="country-dot" style="background:#f59e0b"></span><span class="country-name">Spain</span><div class="country-track"><div class="country-fill" style="width:70%;background:#f59e0b"></div></div><span class="country-count">21</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Italy')" id="crow-Italy"><span class="country-dot" style="background:#22c55e"></span><span class="country-name">Italy</span><div class="country-track"><div class="country-fill" style="width:43%;background:#22c55e"></div></div><span class="country-count">13</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Germany')" id="crow-Germany"><span class="country-dot" style="background:#eab308"></span><span class="country-name">Germany</span><div class="country-track"><div class="country-fill" style="width:40%;background:#eab308"></div></div><span class="country-count">12</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Denmark')" id="crow-Denmark"><span class="country-dot" style="background:#f97316"></span><span class="country-name">Denmark</span><div class="country-track"><div class="country-fill" style="width:36%;background:#f97316"></div></div><span class="country-count">11</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Netherlands')" id="crow-Netherlands"><span class="country-dot" style="background:#10b981"></span><span class="country-name">Netherlands</span><div class="country-track"><div class="country-fill" style="width:26%;background:#10b981"></div></div><span class="country-count">8</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Belgium')" id="crow-Belgium"><span class="country-dot" style="background:#a78bfa"></span><span class="country-name">Belgium</span><div class="country-track"><div class="country-fill" style="width:16%;background:#a78bfa"></div></div><span class="country-count">5</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Poland')" id="crow-Poland"><span class="country-dot" style="background:#6366f1"></span><span class="country-name">Poland</span><div class="country-track"><div class="country-fill" style="width:16%;background:#6366f1"></div></div><span class="country-count">5</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Greece')" id="crow-Greece"><span class="country-dot" style="background:#f472b6"></span><span class="country-name">Greece</span><div class="country-track"><div class="country-fill" style="width:16%;background:#f472b6"></div></div><span class="country-count">5</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Portugal')" id="crow-Portugal"><span class="country-dot" style="background:#0ea5e9"></span><span class="country-name">Portugal</span><div class="country-track"><div class="country-fill" style="width:10%;background:#0ea5e9"></div></div><span class="country-count">3</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Romania')" id="crow-Romania"><span class="country-dot" style="background:#ec4899"></span><span class="country-name">Romania</span><div class="country-track"><div class="country-fill" style="width:10%;background:#ec4899"></div></div><span class="country-count">3</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Ireland')" id="crow-Ireland"><span class="country-dot" style="background:#34d399"></span><span class="country-name">Ireland</span><div class="country-track"><div class="country-fill" style="width:10%;background:#34d399"></div></div><span class="country-count">3</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Sweden')" id="crow-Sweden"><span class="country-dot" style="background:#8b5cf6"></span><span class="country-name">Sweden</span><div class="country-track"><div class="country-fill" style="width:6%;background:#8b5cf6"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Austria')" id="crow-Austria"><span class="country-dot" style="background:#84cc16"></span><span class="country-name">Austria</span><div class="country-track"><div class="country-fill" style="width:6%;background:#84cc16"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Norway')" id="crow-Norway"><span class="country-dot" style="background:#4ade80"></span><span class="country-name">Norway</span><div class="country-track"><div class="country-fill" style="width:6%;background:#4ade80"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Turkey')" id="crow-Turkey"><span class="country-dot" style="background:#f43f5e"></span><span class="country-name">Turkey</span><div class="country-track"><div class="country-fill" style="width:6%;background:#f43f5e"></div></div><span class="country-count">2</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Spain/France')" id="crow-Spain_France"><span class="country-dot" style="background:#888"></span><span class="country-name">Spain/France</span><div class="country-track"><div class="country-fill" style="width:3%;background:#888"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Slovenia')" id="crow-Slovenia"><span class="country-dot" style="background:#c084fc"></span><span class="country-name">Slovenia</span><div class="country-track"><div class="country-fill" style="width:3%;background:#c084fc"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Croatia')" id="crow-Croatia"><span class="country-dot" style="background:#fb923c"></span><span class="country-name">Croatia</span><div class="country-track"><div class="country-fill" style="width:3%;background:#fb923c"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Hungary')" id="crow-Hungary"><span class="country-dot" style="background:#fbbf24"></span><span class="country-name">Hungary</span><div class="country-track"><div class="country-fill" style="width:3%;background:#fbbf24"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Georgia')" id="crow-Georgia"><span class="country-dot" style="background:#2dd4bf"></span><span class="country-name">Georgia</span><div class="country-track"><div class="country-fill" style="width:3%;background:#2dd4bf"></div></div><span class="country-count">1</span></div>
+<div class="country-bar-row" onclick="toggleCountry('Israel')" id="crow-Israel"><span class="country-dot" style="background:#818cf8"></span><span class="country-name">Israel</span><div class="country-track"><div class="country-fill" style="width:3%;background:#818cf8"></div></div><span class="country-count">1</span></div>
+      </div>
+    </div>
+    <button class="drawer-reset" onclick="resetFilters()">Reset all filters</button>
+  </div>
+</div>
+
+<script>
+const DATA = [{"name": "Caroline A. Sabin", "country": "UK", "institution": "UCL Institute for Global Health", "city": "London", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 12, "h_index": 71, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Senior author", "Poster presenter"], "expertise": "HIV epidemiology, cohort studies (EuroSIDA, D:A:D)", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Sabin"}, {"name": "Amanda Mocroft", "country": "UK", "institution": "UCL Dept of Infection & Population Health", "city": "London", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 8, "h_index": 62, "conferences": ["EACS 2023", "CROI 2024"], "roles": ["Senior author"], "expertise": "EuroSIDA, cohort epidemiology, kidney disease", "topics": ["Cohort Studies & Epidemiology", "Comorbidities, Ageing & Renal", "Opportunistic Infections & TB"], "last_name": "Mocroft"}, {"name": "Chloe Orkin", "country": "UK", "institution": "Queen Mary University of London / SHARE Collaborative", "city": "London", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 5, "h_index": 42, "conferences": ["Glasgow 2024", "EACS 2023", "IAS 2024"], "roles": ["Conference chair", "First author", "Poster presenter"], "expertise": "HIV clinical trials, doravirine, antiretrovirals", "topics": ["ART & Treatment", "Opportunistic Infections & TB"], "last_name": "Orkin"}, {"name": "Jasmini Alagaratnam", "country": "UK", "institution": "Chelsea & Westminster Hospital / Imperial College London", "city": "London", "journals": ["Lancet HIV", "HIV Medicine"], "pub_count": 4, "h_index": 18, "conferences": ["Glasgow 2024", "EACS 2023", "EACS 2025"], "roles": ["First author", "Invited speaker"], "expertise": "CVD prevention, EACS guidelines panel, statins in HIV", "topics": ["Prevention, PrEP & Sexual Health", "Cardiovascular & Metabolic"], "last_name": "Alagaratnam"}, {"name": "Alan Winston", "country": "UK", "institution": "Imperial College London / St Mary's Hospital", "city": "London", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 6, "h_index": 52, "conferences": ["Glasgow 2024", "EACS 2023", "CROI 2024"], "roles": ["Co-author", "Poster co-author"], "expertise": "Neurocognition, ART clinical trials", "topics": ["ART & Treatment", "Neurology & Mental Health"], "last_name": "Winston"}, {"name": "Sarah Fidler", "country": "UK", "institution": "Imperial College London", "city": "London", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 4, "h_index": 47, "conferences": ["IAS 2024", "CROI 2024"], "roles": ["Co-author"], "expertise": "HIV cure research, early treatment, HIV reservoirs", "topics": ["ART & Treatment", "Opportunistic Infections & TB", "HIV Cure & Immunology"], "last_name": "Fidler"}, {"name": "Andrew N. Phillips", "country": "UK", "institution": "University College London", "city": "London", "journals": ["Lancet HIV"], "pub_count": 4, "h_index": 68, "conferences": [], "roles": ["Senior author"], "expertise": "HIV mathematical modelling", "topics": ["Modelling & Biostatistics"], "last_name": "Phillips"}, {"name": "Marta Boffito", "country": "UK", "institution": "Chelsea & Westminster Hospital", "city": "London", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 38, "conferences": ["Glasgow 2024"], "roles": ["Co-author", "Poster presenter"], "expertise": "Clinical pharmacology, drug interactions", "topics": ["Pharmacology & Drug Interactions"], "last_name": "Boffito"}, {"name": "Laura Waters", "country": "UK", "institution": "NHS England / HIV Medicine Co-Editor", "city": "London", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 22, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-Editor", "Speaker"], "expertise": "ART guidelines, BHIVA", "topics": ["ART & Treatment"], "last_name": "Waters"}, {"name": "Fiona Burns", "country": "UK", "institution": "UCL / Royal Free Hospital", "city": "London", "journals": ["HIV Medicine"], "pub_count": 4, "h_index": 28, "conferences": ["Glasgow 2024", "EACS 2023"], "roles": ["Co-author"], "expertise": "HIV testing, migrant health, late diagnosis", "topics": ["Stigma, Equity & Access"], "last_name": "Burns"}, {"name": "Andrew Hill", "country": "UK", "institution": "University of Liverpool", "city": "Liverpool", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 5, "h_index": 45, "conferences": ["Glasgow 2024", "CROI 2024"], "roles": ["First author", "Viewpoint author"], "expertise": "HIV drug access, dolutegravir resistance, pharmacology", "topics": ["ART & Treatment", "Drug Resistance & Virology", "Pharmacology & Drug Interactions"], "last_name": "Hill"}, {"name": "Catia Marzolini", "country": "UK", "institution": "University of Liverpool / Univ Basel", "city": "Liverpool", "journals": ["Lancet HIV", "HIV Medicine"], "pub_count": 4, "h_index": 38, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Scientific committee"], "expertise": "Drug-drug interactions, clinical pharmacology, PBPK", "topics": ["Pharmacology & Drug Interactions"], "last_name": "Marzolini"}, {"name": "Julie Fox", "country": "UK", "institution": "Guy's and St Thomas' Hospital / KCL", "city": "London", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 4, "h_index": 34, "conferences": ["Glasgow 2024", "EACS 2023"], "roles": ["Co-author"], "expertise": "Acute HIV, HIV prevention, sexual health", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Fox"}, {"name": "Shema Tariq", "country": "UK", "institution": "University College London", "city": "London", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 3, "h_index": 19, "conferences": ["Glasgow 2024"], "roles": ["Co-author"], "expertise": "Women and HIV, cascade of care, health inequalities", "topics": ["Women, Gender & Pregnancy", "Stigma, Equity & Access"], "last_name": "Tariq"}, {"name": "Fiona Lampe", "country": "UK", "institution": "University College London", "city": "London", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 3, "h_index": 31, "conferences": ["Glasgow 2024"], "roles": ["Oral presenter"], "expertise": "Mental health in HIV, Positive Voices survey", "topics": ["Neurology & Mental Health"], "last_name": "Lampe"}, {"name": "Colette Smith", "country": "UK", "institution": "UCL", "city": "London", "journals": ["Lancet HIV", "HIV Medicine"], "pub_count": 3, "h_index": 29, "conferences": ["Glasgow 2024"], "roles": ["Co-author"], "expertise": "HIV epidemiology", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Smith"}, {"name": "Alison Rodger", "country": "UK", "institution": "University College London", "city": "London", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 36, "conferences": ["Glasgow 2024"], "roles": ["Co-author"], "expertise": "HIV treatment as prevention (PARTNER study)", "topics": ["ART & Treatment", "Prevention, PrEP & Sexual Health"], "last_name": "Rodger"}, {"name": "Adam Trickey", "country": "UK", "institution": "University of Bristol", "city": "Bristol", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 22, "conferences": [], "roles": ["First author"], "expertise": "Mortality trends in HIV, ART-CC collaboration", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Trickey"}, {"name": "Jonathan A.C. Sterne", "country": "UK", "institution": "University of Bristol", "city": "Bristol", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 120, "conferences": [], "roles": ["Last author"], "expertise": "Epidemiology, ART-CC lead", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Sterne"}, {"name": "Gary Whitlock", "country": "UK", "institution": "56 Dean Street / Chelsea & Westminster", "city": "London", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 18, "conferences": [], "roles": ["First author"], "expertise": "HIV prevention, PrEP implementation in London", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Whitlock"}, {"name": "Tristan Barber", "country": "UK", "institution": "Royal Free London / UCL", "city": "London", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2023", "EACS 2025", "Glasgow 2024"], "roles": ["Speaker", "Poster presenter", "Programme committee"], "expertise": "Frailty, NRTI resistance, ageing with HIV", "topics": ["Drug Resistance & Virology", "Comorbidities, Ageing & Renal"], "last_name": "Barber"}, {"name": "Marc Lipman", "country": "UK", "institution": "University College London", "city": "London", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 30, "conferences": [], "roles": ["Co-author"], "expertise": "Pulmonary infections, TB-HIV", "topics": ["Opportunistic Infections & TB"], "last_name": "Lipman"}, {"name": "David Dockrell", "country": "UK", "institution": "University of Edinburgh", "city": "Edinburgh", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 42, "conferences": [], "roles": ["Chair/first author"], "expertise": "Opportunistic infections, BHIVA OI guidelines", "topics": ["Opportunistic Infections & TB"], "last_name": "Dockrell"}, {"name": "Sara Croxford", "country": "UK", "institution": "UK Health Security Agency", "city": "London", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 20, "conferences": [], "roles": ["First author"], "expertise": "HIV surveillance, late diagnosis", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Croxford"}, {"name": "Marie-Claude Boily", "country": "UK", "institution": "Imperial College London", "city": "London", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 55, "conferences": [], "roles": ["Last author"], "expertise": "HIV mathematical modelling", "topics": ["Modelling & Biostatistics"], "last_name": "Boily"}, {"name": "Romain Silhol", "country": "UK", "institution": "Imperial College London", "city": "London", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 14, "conferences": [], "roles": ["First author"], "expertise": "HIV modelling, prevention science", "topics": ["Prevention, PrEP & Sexual Health", "Modelling & Biostatistics"], "last_name": "Silhol"}, {"name": "Anna Turkova", "country": "UK", "institution": "University College London", "city": "London", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 24, "conferences": ["IAS 2024"], "roles": ["Co-author"], "expertise": "Paediatric HIV, tuberculosis-HIV, clinical trials", "topics": ["Opportunistic Infections & TB", "Paediatric & Adolescent HIV"], "last_name": "Turkova"}, {"name": "Vanessa Apea", "country": "UK", "institution": "Barts Health NHS Trust", "city": "London", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 18, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "HIV stigma, equity, sexual health", "topics": ["Prevention, PrEP & Sexual Health", "Stigma, Equity & Access"], "last_name": "Apea"}, {"name": "Mike Youle", "country": "UK", "institution": "London", "city": "London", "journals": [], "pub_count": 1, "h_index": 25, "conferences": ["EACS 2023"], "roles": ["Session chair"], "expertise": "HIV clinical care, EACS Goes East chair", "topics": ["ART & Treatment"], "last_name": "Youle"}, {"name": "Yvonne Gilleece", "country": "UK", "institution": "Brighton & Sussex Medical School", "city": "Brighton", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Speaker", "Discussant"], "expertise": "Women & HIV, PrEP in women", "topics": ["Prevention, PrEP & Sexual Health", "Women, Gender & Pregnancy"], "last_name": "Gilleece"}, {"name": "Bernard Surial", "country": "Switzerland", "institution": "Inselspital, Bern University Hospital", "city": "Bern", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 5, "h_index": 22, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Last author", "Oral presenter", "Poster co-author"], "expertise": "HIV metabolic complications, TAF/TDF effects, cardiovascular risk", "topics": ["Cardiovascular & Metabolic", "Opportunistic Infections & TB"], "last_name": "Surial"}, {"name": "Katharina Kusejko", "country": "Switzerland", "institution": "University Hospital Zurich / ETH Zurich (SHCS Data Centre)", "city": "Zurich", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 6, "h_index": 18, "conferences": ["EACS 2023"], "roles": ["Last author", "Co-author", "Poster presenter"], "expertise": "HIV drug resistance, biostatistics, SHCS epidemiology", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology", "Opportunistic Infections & TB", "Modelling & Biostatistics"], "last_name": "Kusejko"}, {"name": "Huldrych F. Günthard", "country": "Switzerland", "institution": "University Hospital Zurich / SHCS President", "city": "Zurich", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 5, "h_index": 78, "conferences": [], "roles": ["Senior author"], "expertise": "HIV virology, drug resistance, SHCS", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology", "Opportunistic Infections & TB"], "last_name": "Günthard"}, {"name": "Roger D. Kouyos", "country": "Switzerland", "institution": "University Hospital Zurich / University of Zurich", "city": "Zurich", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 4, "h_index": 35, "conferences": [], "roles": ["Co-last author"], "expertise": "HIV drug resistance, mathematical modelling, epidemics", "topics": ["Drug Resistance & Virology", "Modelling & Biostatistics"], "last_name": "Kouyos"}, {"name": "Alexandra Calmy", "country": "Switzerland", "institution": "Geneva University Hospitals", "city": "Geneva", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 4, "h_index": 35, "conferences": ["EACS 2023"], "roles": ["Co-author", "Guidelines panel"], "expertise": "HIV treatment, prevention, gender", "topics": ["ART & Treatment", "Prevention, PrEP & Sexual Health", "Women, Gender & Pregnancy"], "last_name": "Calmy"}, {"name": "Matthias Cavassini", "country": "Switzerland", "institution": "CHUV, Lausanne University Hospital", "city": "Lausanne", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 4, "h_index": 30, "conferences": ["EACS 2023"], "roles": ["Co-senior author"], "expertise": "HIV clinical care, Swiss HIV Cohort Study", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Cavassini"}, {"name": "Marcel Stoeckle", "country": "Switzerland", "institution": "University Hospital Basel", "city": "Basel", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 3, "h_index": 20, "conferences": [], "roles": ["Co-author"], "expertise": "HIV infectious diseases", "topics": ["Opportunistic Infections & TB"], "last_name": "Stoeckle"}, {"name": "Philip E. Tarr", "country": "Switzerland", "institution": "Kantonsspital Bruderholz / University of Basel", "city": "Basel", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 3, "h_index": 26, "conferences": [], "roles": ["Co-author"], "expertise": "HIV comorbidities, ageing", "topics": ["Comorbidities, Ageing & Renal", "Opportunistic Infections & TB"], "last_name": "Tarr"}, {"name": "Enos Bernasconi", "country": "Switzerland", "institution": "Regional Hospital Lugano (EOC)", "city": "Lugano", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 3, "h_index": 22, "conferences": [], "roles": ["Co-author"], "expertise": "Infectious diseases, SHCS site PI", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Bernasconi"}, {"name": "Dominique L. Braun", "country": "Switzerland", "institution": "University Hospital Zurich", "city": "Zurich", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 3, "h_index": 24, "conferences": [], "roles": ["Co-author"], "expertise": "HIV treatment, PrEP", "topics": ["ART & Treatment", "Prevention, PrEP & Sexual Health", "Opportunistic Infections & TB"], "last_name": "Braun"}, {"name": "Matthias Egger", "country": "Switzerland", "institution": "University of Bern, ISPM", "city": "Bern", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 130, "conferences": [], "roles": ["Co-last author"], "expertise": "Epidemiology, IeDEA collaboration", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Egger"}, {"name": "Jan S. Fehr", "country": "Switzerland", "institution": "University of Zurich", "city": "Zurich", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 24, "conferences": [], "roles": ["Senior co-author"], "expertise": "Public health, SwissPrEPared cohort", "topics": ["Cohort Studies & Epidemiology", "Prevention, PrEP & Sexual Health"], "last_name": "Fehr"}, {"name": "Benjamin Hampel", "country": "Switzerland", "institution": "University of Zurich / Checkpoint Zurich", "city": "Zurich", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 12, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-last author", "Session chair", "Poster presenter"], "expertise": "PrEP implementation, MSM health", "topics": ["Prevention, PrEP & Sexual Health", "Stigma, Equity & Access"], "last_name": "Hampel"}, {"name": "Gilles Wandeler", "country": "Switzerland", "institution": "Inselspital, Bern University Hospital", "city": "Bern", "journals": ["Clinical Infectious Diseases"], "pub_count": 3, "h_index": 30, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Co-author", "Scientific committee", "Session chair"], "expertise": "HIV epidemiology, co-infections", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Wandeler"}, {"name": "Charles Béguelin", "country": "Switzerland", "institution": "Inselspital, Bern University Hospital", "city": "Bern", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 2, "h_index": 14, "conferences": [], "roles": ["Co-author"], "expertise": "HIV-HBV coinfection", "topics": ["Liver & Hepatitis Coinfection", "Opportunistic Infections & TB"], "last_name": "Béguelin"}, {"name": "Anna Hachfeld", "country": "Switzerland", "institution": "Inselspital, Bern University Hospital", "city": "Bern", "journals": [], "pub_count": 1, "h_index": 12, "conferences": ["EACS 2023", "EACS 2025", "Glasgow 2024"], "roles": ["Discussant", "Senior author (P115)"], "expertise": "Women & HIV, menopause, HIV ageing", "topics": ["Women, Gender & Pregnancy", "Comorbidities, Ageing & Renal"], "last_name": "Hachfeld"}, {"name": "Hansjakob Furrer", "country": "Switzerland", "institution": "Inselspital, Bern University Hospital", "city": "Bern", "journals": ["Clinical Infectious Diseases"], "pub_count": 3, "h_index": 52, "conferences": [], "roles": ["Co-author"], "expertise": "HIV clinical care, SHCS", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Furrer"}, {"name": "Katharine E.A. Darling", "country": "Switzerland", "institution": "CHUV, Lausanne", "city": "Lausanne", "journals": ["Clinical Infectious Diseases"], "pub_count": 2, "h_index": 18, "conferences": ["Glasgow 2024"], "roles": ["Co-author", "Invited speaker"], "expertise": "HIV stigma in healthcare, clinical care", "topics": ["Stigma, Equity & Access", "Opportunistic Infections & TB"], "last_name": "Darling"}, {"name": "Frédérique Hovaguimian", "country": "Switzerland", "institution": "University of Zurich (Epidemiology)", "city": "Zurich", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 10, "conferences": [], "roles": ["First author"], "expertise": "STI incidence, PrEP cohort studies", "topics": ["Cohort Studies & Epidemiology", "Prevention, PrEP & Sexual Health"], "last_name": "Hovaguimian"}, {"name": "Karoline Aebi-Popp", "country": "Switzerland", "institution": "Inselspital, Bern", "city": "Bern", "journals": [], "pub_count": 1, "h_index": 14, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Session chair", "Panelist"], "expertise": "HPV, women & HIV, pregnancy", "topics": ["Women, Gender & Pregnancy"], "last_name": "Aebi-Popp"}, {"name": "Niklaus Labhardt", "country": "Switzerland", "institution": "Swiss Tropical and Public Health Institute", "city": "Basel", "journals": [], "pub_count": 2, "h_index": 30, "conferences": ["Glasgow 2024"], "roles": ["Senior author", "Scientific committee"], "expertise": "HIV care in sub-Saharan Africa, implementation science", "topics": ["ART & Treatment"], "last_name": "Labhardt"}, {"name": "Jessy J. Duran Ramirez", "country": "Switzerland", "institution": "University Hospital Zurich", "city": "Zurich", "journals": ["Clinical Infectious Diseases"], "pub_count": 2, "h_index": 8, "conferences": ["EACS 2025"], "roles": ["First author", "Presenter"], "expertise": "HIV diagnosis in migrants", "topics": ["Stigma, Equity & Access", "Opportunistic Infections & TB"], "last_name": "Ramirez"}, {"name": "Stefanie Hossmann", "country": "Switzerland", "institution": "University of Bern, ISPM", "city": "Bern", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 10, "conferences": [], "roles": ["Co-author"], "expertise": "HIV epidemiology, IeDEA", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Hossmann"}, {"name": "Jens D. Lundgren", "country": "Denmark", "institution": "CHIP, Rigshospitalet / University of Copenhagen", "city": "Copenhagen", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 8, "h_index": 82, "conferences": ["EACS 2023", "CROI 2024"], "roles": ["Senior author", "CHIP Director"], "expertise": "START trial, D:A:D, EuroSIDA, COVID-19 & HIV", "topics": ["ART & Treatment", "Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Lundgren"}, {"name": "Lene Ryom", "country": "Denmark", "institution": "CHIP, Rigshospitalet", "city": "Copenhagen", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 6, "h_index": 37, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["First author", "Scientific committee"], "expertise": "ART toxicity, CVD, kidney disease, D:A:D", "topics": ["ART & Treatment", "Cohort Studies & Epidemiology", "Cardiovascular & Metabolic", "Comorbidities, Ageing & Renal", "Opportunistic Infections & TB"], "last_name": "Ryom"}, {"name": "Susanne Dam Nielsen", "country": "Denmark", "institution": "Rigshospitalet / University of Copenhagen", "city": "Copenhagen", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 5, "h_index": 30, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-last author", "Scientific committee"], "expertise": "HIV immunology, comorbidities, cardiovascular", "topics": ["Cardiovascular & Metabolic", "Comorbidities, Ageing & Renal", "HIV Cure & Immunology"], "last_name": "Nielsen"}, {"name": "Ole Kirk", "country": "Denmark", "institution": "CHIP, Rigshospitalet", "city": "Copenhagen", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 4, "h_index": 50, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "EuroSIDA, European HIV epidemiology", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Kirk"}, {"name": "Dorthe Raben", "country": "Denmark", "institution": "CHIP, Rigshospitalet", "city": "Copenhagen", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 18, "conferences": [], "roles": ["Co-author"], "expertise": "EuroTEST, HIV testing policy", "topics": ["ART & Treatment"], "last_name": "Raben"}, {"name": "Joanne Reekie", "country": "Denmark", "institution": "CHIP, Rigshospitalet", "city": "Copenhagen", "journals": ["Clinical Infectious Diseases"], "pub_count": 3, "h_index": 20, "conferences": [], "roles": ["Last author"], "expertise": "HIV biostatistics, D:A:D/RESPOND", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB", "Modelling & Biostatistics"], "last_name": "Reekie"}, {"name": "Erich Tusch", "country": "Denmark", "institution": "CHIP, Rigshospitalet", "city": "Copenhagen", "journals": ["Clinical Infectious Diseases"], "pub_count": 2, "h_index": 8, "conferences": [], "roles": ["First author"], "expertise": "HIV mortality trends", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Tusch"}, {"name": "Jesper Gunst", "country": "Denmark", "institution": "Aarhus University Hospital", "city": "Aarhus", "journals": [], "pub_count": 1, "h_index": 14, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Case presenter", "STEPS workshop"], "expertise": "HIV cure research", "topics": ["HIV Cure & Immunology"], "last_name": "Gunst"}, {"name": "Ellen Moseholm", "country": "Denmark", "institution": "Denmark", "city": "Copenhagen", "journals": [], "pub_count": 1, "h_index": 10, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Session chair", "Panelist"], "expertise": "Menopause & HIV", "topics": ["Women, Gender & Pregnancy"], "last_name": "Moseholm"}, {"name": "Raquel Martin-Iguacel", "country": "Denmark", "institution": "Hôpital Bicêtre / Univ Copenhagen (dual)", "city": "Copenhagen", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 20, "conferences": ["EACS 2023"], "roles": ["Speaker"], "expertise": "Cardiovascular disease and HIV, COVID-19 in PLHIV", "topics": ["Cardiovascular & Metabolic"], "last_name": "Martin-Iguacel"}, {"name": "Ann-Brit Eg Hansen", "country": "Denmark", "institution": "Copenhagen", "city": "Copenhagen", "journals": [], "pub_count": 1, "h_index": 16, "conferences": ["Glasgow 2024"], "roles": ["Scientific committee"], "expertise": "HIV clinical care", "topics": ["ART & Treatment"], "last_name": "Hansen"}, {"name": "Jean-Michel Molina", "country": "France", "institution": "Saint-Louis & Lariboisière Hospitals, Université Paris Cité", "city": "Paris", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 6, "h_index": 70, "conferences": ["EACS 2023", "EACS 2025", "Glasgow 2024"], "roles": ["Plenary speaker", "Conference co-chair", "Poster presenter"], "expertise": "PrEP (IPERGAY), HIV clinical trials", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Molina"}, {"name": "Christine Katlama", "country": "France", "institution": "Hôpital Pitié-Salpêtrière, Sorbonne University", "city": "Paris", "journals": ["Lancet HIV"], "pub_count": 4, "h_index": 65, "conferences": ["Glasgow 2024"], "roles": ["Senior investigator", "DORAL trial PI"], "expertise": "HIV treatment, clinical trials", "topics": ["ART & Treatment"], "last_name": "Katlama"}, {"name": "Clotilde Allavena", "country": "France", "institution": "CHU Nantes", "city": "Nantes", "journals": [], "pub_count": 2, "h_index": 18, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Poster presenter", "Programme committee"], "expertise": "Dat'AIDS cohort, dual therapy", "topics": ["ART & Treatment", "Cohort Studies & Epidemiology"], "last_name": "Allavena"}, {"name": "Fabrice Bonnet", "country": "France", "institution": "University of Bordeaux / INSERM", "city": "Bordeaux", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 4, "h_index": 30, "conferences": ["Glasgow 2024"], "roles": ["Co-author", "Poster presenter"], "expertise": "AquiVIH-NA cohort, HIV epidemiology", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Bonnet"}, {"name": "Jade Ghosn", "country": "France", "institution": "Bichat University Hospital, AP-HP", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 22, "conferences": ["EACS 2023", "EACS 2025", "Glasgow 2024"], "roles": ["Poster presenter", "Programme committee"], "expertise": "CAB/RPV real-world, DoxyVac", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Ghosn"}, {"name": "Sophie Grabar", "country": "France", "institution": "INSERM / Sorbonne Université", "city": "Paris", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 35, "conferences": ["EACS 2025"], "roles": ["Co-author", "ePoster chair"], "expertise": "HIV epidemiology, biostatistics", "topics": ["Cohort Studies & Epidemiology", "Modelling & Biostatistics"], "last_name": "Grabar"}, {"name": "Karine Lacombe", "country": "France", "institution": "Sorbonne Université", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 28, "conferences": ["EACS 2025"], "roles": ["Local conference co-chair"], "expertise": "Hepatitis/HIV coinfection", "topics": ["Liver & Hepatitis Coinfection"], "last_name": "Lacombe"}, {"name": "Romain Palich", "country": "France", "institution": "Hôpital Pitié-Salpêtrière, Sorbonne University", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 14, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Oral presenter (DORAL trial)", "Poster presenter"], "expertise": "Maintenance therapy, DORAL trial", "topics": ["ART & Treatment"], "last_name": "Palich"}, {"name": "Dominique Costagliola", "country": "France", "institution": "INSERM", "city": "Paris", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 75, "conferences": ["Glasgow 2024"], "roles": ["Senior investigator"], "expertise": "HIV epidemiology, French cohorts", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Costagliola"}, {"name": "Nathalie De Castro", "country": "France", "institution": "Paris", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 20, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Scientific committee", "Co-author"], "expertise": "HIV treatment", "topics": ["ART & Treatment"], "last_name": "Castro"}, {"name": "Franck Boccara", "country": "France", "institution": "Hôpital Saint-Antoine, Sorbonne Université", "city": "Paris", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 34, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Co-author", "MTE co-chair"], "expertise": "Cardiology, HIV & cardiovascular disease", "topics": ["Cardiovascular & Metabolic"], "last_name": "Boccara"}, {"name": "Sophie Abgrall", "country": "France", "institution": "APHP, Hôpital Béclère / INSERM", "city": "Clamart", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 22, "conferences": [], "roles": ["Co-author"], "expertise": "Internal medicine, HIV cohorts", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Abgrall"}, {"name": "Mojgan Hessamfar", "country": "France", "institution": "University of Bordeaux", "city": "Bordeaux", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 16, "conferences": ["Glasgow 2024"], "roles": ["Co-author", "Poster presenter"], "expertise": "HIV epidemiology, AquiVIH cohort", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Hessamfar"}, {"name": "Raghiatou Baldé", "country": "France", "institution": "Sorbonne Université, INSERM", "city": "Paris", "journals": [], "pub_count": 1, "h_index": 10, "conferences": ["Glasgow 2024"], "roles": ["Oral presenter"], "expertise": "OncoVIHAC: cancer & HIV", "topics": ["ART & Treatment"], "last_name": "Baldé"}, {"name": "Cathia Soulie", "country": "France", "institution": "Paris", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "HIV drug resistance, doravirine", "topics": ["ART & Treatment", "Drug Resistance & Virology"], "last_name": "Soulie"}, {"name": "Anne-Geneviève Marcelin", "country": "France", "institution": "Paris", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 22, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "Resistance at virologic failure", "topics": ["Drug Resistance & Virology"], "last_name": "Marcelin"}, {"name": "Constance Delaugerre", "country": "France", "institution": "Paris", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 24, "conferences": ["EACS 2025"], "roles": ["Programme committee"], "expertise": "HIV virology, resistance", "topics": ["Drug Resistance & Virology"], "last_name": "Delaugerre"}, {"name": "Sophie Seang", "country": "France", "institution": "Paris", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Poster presenter"], "expertise": "CAB/RPV pharmacokinetics, HBV reactivation", "topics": ["Liver & Hepatitis Coinfection", "Pharmacology & Drug Interactions"], "last_name": "Seang"}, {"name": "Beatriz Mothe", "country": "Spain/France", "institution": "IrsiCaixa, Barcelona", "city": "Barcelona", "journals": [], "pub_count": 2, "h_index": 22, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Speaker"], "expertise": "HIV cure, therapeutic vaccines", "topics": ["HIV Cure & Immunology"], "last_name": "Mothe"}, {"name": "Laura Levi", "country": "France", "institution": "Saint-Louis & Lariboisière Hospitals, Paris", "city": "Paris", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 12, "conferences": ["EACS 2023"], "roles": ["Co-author (EACS guidelines)"], "expertise": "EACS guidelines drafting", "topics": ["ART & Treatment"], "last_name": "Levi"}, {"name": "Cécile Goujard", "country": "France", "institution": "France", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 26, "conferences": ["EACS 2025"], "roles": ["Presenter"], "expertise": "RHIVIERA clinical trials", "topics": ["ART & Treatment"], "last_name": "Goujard"}, {"name": "Lauriane Goldwirt", "country": "France", "institution": "France", "city": "Paris", "journals": [], "pub_count": 2, "h_index": 12, "conferences": ["EACS 2025"], "roles": ["Presenter (DoxyVac trial)"], "expertise": "DoxyVac, doxyPEP pharmacology", "topics": ["Prevention, PrEP & Sexual Health", "Pharmacology & Drug Interactions"], "last_name": "Goldwirt"}, {"name": "Pantxika Bellecave", "country": "France", "institution": "CHU Bordeaux", "city": "Bordeaux", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 18, "conferences": [], "roles": ["Co-author"], "expertise": "HIV virology", "topics": ["Drug Resistance & Virology"], "last_name": "Bellecave"}, {"name": "Esteban Martínez", "country": "Spain", "institution": "Hospital Clinic Barcelona / CIBERINFEC", "city": "Barcelona", "journals": ["Lancet HIV", "HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 7, "h_index": 62, "conferences": ["EACS 2023", "IAS 2024", "Glasgow 2024", "EACS 2025"], "roles": ["EACS President", "Conference co-chair", "Invited speaker", "MTE chair"], "expertise": "Metabolic complications, ART switches, statins in HIV", "topics": ["ART & Treatment", "Cardiovascular & Metabolic", "Opportunistic Infections & TB"], "last_name": "Martínez"}, {"name": "Juan Ambrosioni", "country": "Spain", "institution": "Hospital Clinic Barcelona / CIBERINFEC", "city": "Barcelona", "journals": ["HIV Medicine"], "pub_count": 5, "h_index": 28, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["First author (EACS guidelines)", "Session co-chair", "ePoster chair"], "expertise": "EACS guidelines lead, ART, opportunistic infections", "topics": ["Opportunistic Infections & TB"], "last_name": "Ambrosioni"}, {"name": "José Ramón Arribas", "country": "Spain", "institution": "Hospital Universitario La Paz", "city": "Madrid", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 5, "h_index": 55, "conferences": ["Glasgow 2024", "EACS 2023", "EACS 2025"], "roles": ["Invited speaker", "Poster senior author"], "expertise": "ART pipeline, dual therapy, VOLVER trial", "topics": ["ART & Treatment", "Opportunistic Infections & TB"], "last_name": "Arribas"}, {"name": "José M. Miró", "country": "Spain", "institution": "Hospital Clinic, University of Barcelona", "city": "Barcelona", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 5, "h_index": 55, "conferences": ["IAS 2024", "EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Poster presenter"], "expertise": "Infectious endocarditis, transplant & HIV", "topics": ["Opportunistic Infections & TB"], "last_name": "Miró"}, {"name": "Eugenia Negredo", "country": "Spain", "institution": "IrsiCaixa AIDS Research Institute / Hospital Germans Trias", "city": "Badalona", "journals": ["Lancet HIV", "HIV Medicine"], "pub_count": 4, "h_index": 44, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author"], "expertise": "Cardiovascular risk, HIV lipodystrophy, clinical trials", "topics": ["Cardiovascular & Metabolic"], "last_name": "Negredo"}, {"name": "Josep M. Llibre", "country": "Spain", "institution": "Hospital Universitari Germans Trias i Pujol", "city": "Badalona", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 4, "h_index": 40, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "ART treatment switching, fostemsavir", "topics": ["ART & Treatment", "Opportunistic Infections & TB"], "last_name": "Llibre"}, {"name": "Arkaitz Imaz", "country": "Spain", "institution": "Hospital Universitari de Bellvitge", "city": "Barcelona", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 20, "conferences": ["Glasgow 2024"], "roles": ["Co-author", "Oral presenter (O22)"], "expertise": "CAB/RPV tissue pharmacokinetics", "topics": ["Pharmacology & Drug Interactions"], "last_name": "Imaz"}, {"name": "Juan Berenguer", "country": "Spain", "institution": "Hospital Gregorio Marañón", "city": "Madrid", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 40, "conferences": ["EACS 2025"], "roles": ["Co-author", "Presenter"], "expertise": "Infectious diseases, liver cirrhosis", "topics": ["Liver & Hepatitis Coinfection", "Opportunistic Infections & TB"], "last_name": "Berenguer"}, {"name": "Carmen Hidalgo-Tenorio", "country": "Spain", "institution": "Hospital Universitario San Cecilio", "city": "Granada", "journals": [], "pub_count": 2, "h_index": 18, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "BIC-NOW, CABO-CHANCE studies", "topics": ["ART & Treatment"], "last_name": "Hidalgo-Tenorio"}, {"name": "José I. Bernardino", "country": "Spain", "institution": "Hospital La Paz", "city": "Madrid", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Session chair", "Poster presenter"], "expertise": "CAB+RPV long-acting effectiveness", "topics": ["ART & Treatment"], "last_name": "Bernardino"}, {"name": "Rosario Palacios", "country": "Spain", "institution": "Hospital Virgen de la Victoria", "city": "Málaga", "journals": [], "pub_count": 1, "h_index": 18, "conferences": ["Glasgow 2024"], "roles": ["Oral presenter (O25)"], "expertise": "PRIDOX doxyPEP study", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Palacios"}, {"name": "Ana González-Cordón", "country": "Spain", "institution": "Hospital Clinic Barcelona", "city": "Barcelona", "journals": [], "pub_count": 2, "h_index": 12, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "LA CAB/RPV real-world outcomes", "topics": ["ART & Treatment"], "last_name": "González-Cordón"}, {"name": "María Jesús Pérez Elías", "country": "Spain", "institution": "Hospital Ramón y Cajal", "city": "Madrid", "journals": [], "pub_count": 2, "h_index": 22, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Session chair", "Panelist"], "expertise": "PrEP in women", "topics": ["Prevention, PrEP & Sexual Health", "Women, Gender & Pregnancy"], "last_name": "Elías"}, {"name": "Diana Corona Mata", "country": "Spain", "institution": "Hospital Reina Sofía", "city": "Córdoba", "journals": [], "pub_count": 1, "h_index": 12, "conferences": ["Glasgow 2024"], "roles": ["Oral presenter (O43)"], "expertise": "MIND study, neuropsychiatric comorbidities", "topics": ["Comorbidities, Ageing & Renal", "Neurology & Mental Health"], "last_name": "Mata"}, {"name": "María José Galindo Puerto", "country": "Spain", "institution": "Hospital Clínico Valencia", "city": "Valencia", "journals": [], "pub_count": 2, "h_index": 14, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "RELATIVITY cohort, CAB/RPV in women", "topics": ["Cohort Studies & Epidemiology", "Women, Gender & Pregnancy"], "last_name": "Puerto"}, {"name": "Laila Martín-Carbonero", "country": "Spain", "institution": "Hospital La Paz, Madrid", "city": "Madrid", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 30, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "HCV coinfection, liver disease", "topics": ["Liver & Hepatitis Coinfection"], "last_name": "Martín-Carbonero"}, {"name": "Leire Pérez-Latorre", "country": "Spain", "institution": "Hospital Gregorio Marañón", "city": "Madrid", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 16, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "Coinfections, HCV-HIV, cohort studies", "topics": ["Cohort Studies & Epidemiology", "Liver & Hepatitis Coinfection"], "last_name": "Pérez-Latorre"}, {"name": "Rosa De Miguel", "country": "Spain", "institution": "Hospital La Paz", "city": "Madrid", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 18, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "Treatment simplification, VOLVER DTG/3TC trial", "topics": ["ART & Treatment"], "last_name": "Miguel"}, {"name": "Ramón Teira", "country": "Spain", "institution": "Hospital de Sierrallana", "city": "Torrelavega", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 14, "conferences": [], "roles": ["Co-author"], "expertise": "HIV cohort studies", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Teira"}, {"name": "Daniel Podzamczer", "country": "Spain", "institution": "Hospital Universitari de Bellvitge", "city": "Barcelona", "journals": [], "pub_count": 2, "h_index": 30, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "ART in heavily experienced patients", "topics": ["ART & Treatment"], "last_name": "Podzamczer"}, {"name": "Robert Güerri-Fernández", "country": "Spain", "institution": "Hospital del Mar Research Institute", "city": "Barcelona", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2025"], "roles": ["Presenter"], "expertise": "HIV & acute myocardial infarction", "topics": ["Cardiovascular & Metabolic"], "last_name": "Güerri-Fernández"}, {"name": "Jürgen K. Rockstroh", "country": "Germany", "institution": "University Hospital Bonn", "city": "Bonn", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 8, "h_index": 78, "conferences": ["EACS 2023", "IAS 2024", "Glasgow 2024", "EACS 2025"], "roles": ["Co-Editor HIV Med", "Guidelines chair", "EACS Award recipient"], "expertise": "HIV/HCV coinfection, DAAs, hepatology, EACS guidelines", "topics": ["Liver & Hepatitis Coinfection", "Opportunistic Infections & TB"], "last_name": "Rockstroh"}, {"name": "Georg M.N. Behrens", "country": "Germany", "institution": "Hannover Medical School (MHH) / DZIF", "city": "Hannover", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 4, "h_index": 36, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["First author", "Scientific committee"], "expertise": "COVID-19 in PLWH, metabolic complications, EACS guidelines", "topics": ["Cardiovascular & Metabolic"], "last_name": "Behrens"}, {"name": "Christoph Boesecke", "country": "Germany", "institution": "University Hospital Bonn", "city": "Bonn", "journals": ["HIV Medicine", "Clinical Infectious Diseases"], "pub_count": 3, "h_index": 22, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "Hepatitis coinfections, HBV/HDV", "topics": ["Liver & Hepatitis Coinfection", "Opportunistic Infections & TB"], "last_name": "Boesecke"}, {"name": "Kathrin van Bremen", "country": "Germany", "institution": "University Hospital Bonn", "city": "Bonn", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 3, "h_index": 14, "conferences": ["EACS 2023"], "roles": ["Co-author", "Speaker"], "expertise": "HBV/HDV, HIV comorbidities", "topics": ["Liver & Hepatitis Coinfection", "Comorbidities, Ageing & Renal"], "last_name": "Bremen"}, {"name": "Christoph D. Spinner", "country": "Germany", "institution": "Technical University of Munich", "city": "Munich", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 28, "conferences": [], "roles": ["Co-first author"], "expertise": "HIV treatment, PrEP (DISCOVER trial)", "topics": ["ART & Treatment", "Prevention, PrEP & Sexual Health"], "last_name": "Spinner"}, {"name": "Annette Haberl", "country": "Germany", "institution": "University Hospital Frankfurt", "city": "Frankfurt", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2023", "EACS 2025", "Glasgow 2024"], "roles": ["Session chair (WAVE)", "Poster co-author"], "expertise": "Women & HIV, Ukrainian refugees", "topics": ["Women, Gender & Pregnancy", "Stigma, Equity & Access"], "last_name": "Haberl"}, {"name": "Isabelle Suarez", "country": "Germany", "institution": "University Hospital Cologne", "city": "Cologne", "journals": ["Clinical Infectious Diseases"], "pub_count": 2, "h_index": 14, "conferences": [], "roles": ["Co-author"], "expertise": "HIV medicine", "topics": ["Opportunistic Infections & TB"], "last_name": "Suarez"}, {"name": "Jörg J. Vehreschild", "country": "Germany", "institution": "Goethe-University Hospital Frankfurt", "city": "Frankfurt", "journals": ["Clinical Infectious Diseases", "Lancet HIV"], "pub_count": 3, "h_index": 32, "conferences": [], "roles": ["Co-author"], "expertise": "HIV/infectious diseases, microbiome", "topics": ["Opportunistic Infections & TB"], "last_name": "Vehreschild"}, {"name": "Sebastian Noe", "country": "Germany", "institution": "Munich", "city": "Munich", "journals": [], "pub_count": 2, "h_index": 14, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "DTG/3TC URBAN cohort, GLP-1 agonists in HIV", "topics": ["Cohort Studies & Epidemiology", "Cardiovascular & Metabolic"], "last_name": "Noe"}, {"name": "Gundolf Schuettfort", "country": "Germany", "institution": "Germany", "city": "Germany", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 12, "conferences": ["Glasgow 2024"], "roles": ["First author", "Poster presenter (P057)"], "expertise": "Late diagnosis, ART outcomes", "topics": ["ART & Treatment"], "last_name": "Schuettfort"}, {"name": "Patrick Ingiliz", "country": "Germany", "institution": "Germany", "city": "Berlin", "journals": [], "pub_count": 2, "h_index": 20, "conferences": ["EACS 2023"], "roles": ["Speaker"], "expertise": "NAFLD/NASH, HCV micro-elimination", "topics": ["Cardiovascular & Metabolic", "Liver & Hepatitis Coinfection"], "last_name": "Ingiliz"}, {"name": "Christoph Wyen", "country": "Germany", "institution": "Germany", "city": "Cologne", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 18, "conferences": ["EACS 2023"], "roles": ["Co-author", "Poster presenter (VICDOR)"], "expertise": "Doravirine switch, HIV treatment", "topics": ["ART & Treatment"], "last_name": "Wyen"}, {"name": "Giovanni Guaraldi", "country": "Italy", "institution": "University of Modena and Reggio Emilia", "city": "Modena", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 5, "h_index": 46, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["Co-author", "Poster co-author", "Scientific committee"], "expertise": "HIV & ageing, frailty, metabolic syndrome, EACS guidelines", "topics": ["Cardiovascular & Metabolic", "Comorbidities, Ageing & Renal"], "last_name": "Guaraldi"}, {"name": "Cristina Mussini", "country": "Italy", "institution": "University of Modena and Reggio Emilia", "city": "Modena", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 5, "h_index": 44, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Poster presenter", "Invited speaker"], "expertise": "HIV treatment, INSTI resistance, ICONA cohort, weight gain", "topics": ["ART & Treatment", "Cohort Studies & Epidemiology", "Drug Resistance & Virology", "Cardiovascular & Metabolic"], "last_name": "Mussini"}, {"name": "Antonella Castagna", "country": "Italy", "institution": "IRCCS San Raffaele Scientific Institute", "city": "Milan", "journals": ["Clinical Infectious Diseases"], "pub_count": 4, "h_index": 40, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["Poster presenter", "Programme committee"], "expertise": "Fostemsavir, lenacapavir, multi-drug-resistant HIV", "topics": ["ART & Treatment", "Opportunistic Infections & TB"], "last_name": "Castagna"}, {"name": "Antonella d'Arminio Monforte", "country": "Italy", "institution": "University of Milan / ICONA Foundation", "city": "Milan", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 4, "h_index": 58, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Poster presenter", "ICONA PI"], "expertise": "HIV cohort studies (ICONA), epidemiology", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Monforte"}, {"name": "Vincenzo Spagnuolo", "country": "Italy", "institution": "IRCCS San Raffaele", "city": "Milan", "journals": ["Clinical Infectious Diseases"], "pub_count": 3, "h_index": 22, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Poster presenter"], "expertise": "Fostemsavir, PRESTIGIO registry, MDR HIV", "topics": ["ART & Treatment", "Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Spagnuolo"}, {"name": "Paola Cinque", "country": "Italy", "institution": "San Raffaele Hospital", "city": "Milan", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 3, "h_index": 38, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "HIV neurology, CNS complications", "topics": ["Neurology & Mental Health"], "last_name": "Cinque"}, {"name": "Silvia Nozza", "country": "Italy", "institution": "San Raffaele Hospital", "city": "Milan", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Poster presenter (P030)", "ePoster chair"], "expertise": "PrEP implementation, STIs", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Nozza"}, {"name": "Andrea Antinori", "country": "Italy", "institution": "INMI Spallanzani", "city": "Rome", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 45, "conferences": ["Glasgow 2024"], "roles": ["Co-author"], "expertise": "HIV treatment, neurology", "topics": ["ART & Treatment", "Neurology & Mental Health"], "last_name": "Antinori"}, {"name": "Giulia Marchetti", "country": "Italy", "institution": "University of Milan", "city": "Milan", "journals": [], "pub_count": 2, "h_index": 20, "conferences": ["Glasgow 2024"], "roles": ["Co-author"], "expertise": "T-cell immunology, HIV immunopathology", "topics": ["HIV Cure & Immunology"], "last_name": "Marchetti"}, {"name": "Marianna Menozzi", "country": "Italy", "institution": "University of Modena", "city": "Modena", "journals": ["Clinical Infectious Diseases"], "pub_count": 2, "h_index": 14, "conferences": ["EACS 2023"], "roles": ["Co-author", "Poster presenter"], "expertise": "Doravirine renal/lipid effects", "topics": ["ART & Treatment", "Cardiovascular & Metabolic", "Comorbidities, Ageing & Renal", "Opportunistic Infections & TB"], "last_name": "Menozzi"}, {"name": "Lucia Taramasso", "country": "Italy", "institution": "IRCCS San Martino", "city": "Genova", "journals": [], "pub_count": 2, "h_index": 14, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter (P066)"], "expertise": "SCOLTA cohort, LA ART discontinuation", "topics": ["ART & Treatment", "Cohort Studies & Epidemiology"], "last_name": "Taramasso"}, {"name": "Daniele Armenia", "country": "Italy", "institution": "Rome", "city": "Rome", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "HIV-DNA resistance, PRESTIGIO registry", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology"], "last_name": "Armenia"}, {"name": "Andrea De Vito", "country": "Italy", "institution": "University of Sassari", "city": "Sassari", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "SCOLTA cohort, resistance mutations", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology"], "last_name": "Vito"}, {"name": "Peter Reiss", "country": "Netherlands", "institution": "Amsterdam UMC / Stichting HIV Monitoring", "city": "Amsterdam", "journals": ["HIV Medicine", "Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 5, "h_index": 75, "conferences": ["EACS 2023", "IAS 2024", "Glasgow 2024", "EACS 2025"], "roles": ["EACS Award chair", "Co-author", "Scientific committee"], "expertise": "HIV & ageing, comorbidities, EuroSIDA, AGEhIV", "topics": ["Cohort Studies & Epidemiology", "Comorbidities, Ageing & Renal", "Opportunistic Infections & TB"], "last_name": "Reiss"}, {"name": "Marc van der Valk", "country": "Netherlands", "institution": "Amsterdam UMC", "city": "Amsterdam", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 32, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Scientific committee"], "expertise": "HIV & ageing, metabolic syndrome, cohort studies", "topics": ["Cohort Studies & Epidemiology", "Cardiovascular & Metabolic", "Comorbidities, Ageing & Renal"], "last_name": "Valk"}, {"name": "Ferdinand Wit", "country": "Netherlands", "institution": "Stichting HIV Monitoring (ATHENA)", "city": "Amsterdam", "journals": ["Clinical Infectious Diseases"], "pub_count": 3, "h_index": 28, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Co-author", "Scientific committee"], "expertise": "HIV epidemiology, ATHENA cohort", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Wit"}, {"name": "Annemarie Wensing", "country": "Netherlands", "institution": "UMC Utrecht / EACS Secretary", "city": "Utrecht", "journals": [], "pub_count": 2, "h_index": 35, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Senior author (ROSETTA)", "EACS Secretary"], "expertise": "Drug resistance, 2nd-gen INSTI resistance", "topics": ["Drug Resistance & Virology"], "last_name": "Wensing"}, {"name": "Casper Rokx", "country": "Netherlands", "institution": "Erasmus MC", "city": "Rotterdam", "journals": [], "pub_count": 2, "h_index": 18, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["Speaker (YIP)", "Scientific committee"], "expertise": "Young investigators, HIV pharmacology", "topics": ["Pharmacology & Drug Interactions"], "last_name": "Rokx"}, {"name": "Mafalda Miranda", "country": "Netherlands", "institution": "UMC Utrecht", "city": "Utrecht", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["Glasgow 2024"], "roles": ["Oral presenter (O31 ROSETTA)"], "expertise": "ROSETTA registry, 2nd-gen INSTI resistance", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology"], "last_name": "Miranda"}, {"name": "Hylke Waalewijn", "country": "Netherlands", "institution": "Radboud University Medical Center", "city": "Nijmegen", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 12, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "Drug-drug interactions, paediatric HIV pharmacology", "topics": ["Pharmacology & Drug Interactions", "Paediatric & Adolescent HIV"], "last_name": "Waalewijn"}, {"name": "Patrick G.A. Oomen", "country": "Netherlands", "institution": "Netherlands", "city": "Netherlands", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "Doravirine nationwide effectiveness", "topics": ["ART & Treatment"], "last_name": "Oomen"}, {"name": "Stéphane De Wit", "country": "Belgium", "institution": "CHU Saint-Pierre, ULB", "city": "Brussels", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 4, "h_index": 42, "conferences": ["EACS 2023"], "roles": ["Co-author", "Cohort PI"], "expertise": "D:A:D, EuroSIDA, HIV clinical care", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Wit"}, {"name": "Deborah Konopnicki", "country": "Belgium", "institution": "CHU Saint-Pierre, ULB", "city": "Brussels", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 22, "conferences": ["EACS 2023"], "roles": ["Co-author", "Speaker"], "expertise": "HIV in women, cardiovascular risk, HPV", "topics": ["Cardiovascular & Metabolic", "Women, Gender & Pregnancy"], "last_name": "Konopnicki"}, {"name": "Agnès Libois", "country": "Belgium", "institution": "Saint-Pierre University Hospital", "city": "Brussels", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Poster presenter"], "expertise": "Cognitive impairment assessment", "topics": ["Neurology & Mental Health"], "last_name": "Libois"}, {"name": "Sophie Degroote", "country": "Belgium", "institution": "Ghent University", "city": "Ghent", "journals": [], "pub_count": 1, "h_index": 14, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter (P054)"], "expertise": "RUMBA metabolic outcomes", "topics": ["Cardiovascular & Metabolic"], "last_name": "Degroote"}, {"name": "Nathan Clumeck", "country": "Belgium", "institution": "Saint-Pierre University Hospital", "city": "Brussels", "journals": ["Clinical Infectious Diseases"], "pub_count": 2, "h_index": 48, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "HIV epidemiology, clinical trials", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Clumeck"}, {"name": "Justyna Kowalska", "country": "Poland", "institution": "Medical University of Warsaw", "city": "Warsaw", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 3, "h_index": 20, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["Conference co-chair", "Co-author", "Poster presenter", "Scientific committee"], "expertise": "HIV epidemiology, Central & Eastern Europe HIV care", "topics": ["Cohort Studies & Epidemiology", "Stigma, Equity & Access"], "last_name": "Kowalska"}, {"name": "Miłosz Parczewski", "country": "Poland", "institution": "Pomeranian Medical University", "city": "Szczecin", "journals": ["Lancet Regional Health Europe"], "pub_count": 3, "h_index": 18, "conferences": ["EACS 2023", "IAS 2024", "EACS 2025"], "roles": ["EACS President", "Conference co-chair", "Co-author"], "expertise": "Drug resistance, HIV epidemiology, EACS leadership", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology"], "last_name": "Parczewski"}, {"name": "Bartosz Szetela", "country": "Poland", "institution": "Medical University of Wroclaw", "city": "Wroclaw", "journals": [], "pub_count": 2, "h_index": 12, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Speaker", "Poster presenter"], "expertise": "PrEP practicalities, STIs", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Szetela"}, {"name": "Agata Skrzat-Klapaczyńska", "country": "Poland", "institution": "Medical University of Warsaw", "city": "Warsaw", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Poster presenter"], "expertise": "HCV micro-elimination in CEE", "topics": ["Liver & Hepatitis Coinfection", "Stigma, Equity & Access"], "last_name": "Skrzat-Klapaczyńska"}, {"name": "Dagny Krankowska", "country": "Poland", "institution": "Warsaw", "city": "Warsaw", "journals": [], "pub_count": 1, "h_index": 8, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Session chair"], "expertise": "CVD, HPV, migrant women with HIV", "topics": ["Cardiovascular & Metabolic", "Women, Gender & Pregnancy", "Stigma, Equity & Access"], "last_name": "Krankowska"}, {"name": "Clara Batista", "country": "Portugal", "institution": "Porto", "city": "Porto", "journals": [], "pub_count": 1, "h_index": 8, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter (P010)"], "expertise": "Post-exposure prophylaxis", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Batista"}, {"name": "Sara Magalhães", "country": "Portugal", "institution": "Lisbon", "city": "Lisbon", "journals": [], "pub_count": 1, "h_index": 6, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter"], "expertise": "PrEP loss to follow-up", "topics": ["Prevention, PrEP & Sexual Health"], "last_name": "Magalhães"}, {"name": "Luis Mendão", "country": "Portugal", "institution": "Grupo de Ativistas em Tratamentos / EATG", "city": "Lisbon", "journals": ["Lancet HIV"], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "HIV advocacy, access to care", "topics": ["Stigma, Equity & Access"], "last_name": "Mendão"}, {"name": "Nikos Pantazis", "country": "Greece", "institution": "National & Kapodistrian University of Athens", "city": "Athens", "journals": ["Lancet HIV"], "pub_count": 3, "h_index": 22, "conferences": ["EACS 2023"], "roles": ["Co-author"], "expertise": "Biostatistics, HIV cohorts, ECDC", "topics": ["Cohort Studies & Epidemiology", "Modelling & Biostatistics"], "last_name": "Pantazis"}, {"name": "Giota Touloumi", "country": "Greece", "institution": "National & Kapodistrian University of Athens", "city": "Athens", "journals": [], "pub_count": 2, "h_index": 30, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Poster presenter"], "expertise": "COVID effect on HIV epidemiology", "topics": ["Cohort Studies & Epidemiology"], "last_name": "Touloumi"}, {"name": "Antonios Papadopoulos", "country": "Greece", "institution": "Athens", "city": "Athens", "journals": [], "pub_count": 2, "h_index": 16, "conferences": ["Glasgow 2024"], "roles": ["Poster presenter (DORAVITO)"], "expertise": "Doravirine switching", "topics": ["ART & Treatment"], "last_name": "Papadopoulos"}, {"name": "Giota Lourida", "country": "Greece", "institution": "Evaggelismos General Hospital", "city": "Athens", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Co-author", "Discussant", "Presenter"], "expertise": "Migrant women, SERAY project", "topics": ["Women, Gender & Pregnancy", "Stigma, Equity & Access"], "last_name": "Lourida"}, {"name": "Anastasia Antoniadou", "country": "Greece", "institution": "Athens", "city": "Athens", "journals": [], "pub_count": 2, "h_index": 24, "conferences": ["Glasgow 2024"], "roles": ["Scientific committee"], "expertise": "HIV clinical care", "topics": ["ART & Treatment"], "last_name": "Antoniadou"}, {"name": "Magnus Gisslén", "country": "Sweden", "institution": "University of Gothenburg / Sahlgrenska", "city": "Gothenburg", "journals": ["Lancet HIV"], "pub_count": 4, "h_index": 42, "conferences": ["EACS 2023", "Glasgow 2024"], "roles": ["Co-author", "Scientific committee"], "expertise": "HIV neurology, CNS complications, cardiovascular risk", "topics": ["Cardiovascular & Metabolic", "Neurology & Mental Health"], "last_name": "Gisslén"}, {"name": "Christina Carlander", "country": "Sweden", "institution": "InfCare HIV / Karolinska", "city": "Stockholm", "journals": ["Clinical Infectious Diseases"], "pub_count": 3, "h_index": 16, "conferences": ["Glasgow 2024", "EACS 2025"], "roles": ["Co-author", "Scientific committee", "Presenter"], "expertise": "HIV medicine, Swedish HIV registry", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Carlander"}, {"name": "Robert Zangerle", "country": "Austria", "institution": "Innsbruck Medical University", "city": "Innsbruck", "journals": ["Lancet HIV", "Clinical Infectious Diseases"], "pub_count": 3, "h_index": 30, "conferences": [], "roles": ["Co-author"], "expertise": "Austrian HIV Cohort Study (AHCS)", "topics": ["Cohort Studies & Epidemiology", "Opportunistic Infections & TB"], "last_name": "Zangerle"}, {"name": "David Chromy", "country": "Austria", "institution": "Medical University Vienna", "city": "Vienna", "journals": [], "pub_count": 2, "h_index": 10, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "STI dermatophytes, Mycoplasma genitalium", "topics": ["ART & Treatment"], "last_name": "Chromy"}, {"name": "Cristiana Oprea", "country": "Romania", "institution": "Victor Babes Clinical Hospital / Carol Davila University", "city": "Bucharest", "journals": ["HIV Medicine"], "pub_count": 3, "h_index": 16, "conferences": ["EACS 2023", "Glasgow 2024", "EACS 2025"], "roles": ["Co-author", "Senior author (P134)", "Scientific committee"], "expertise": "HIV clinical care, EACS guidelines, adolescents", "topics": ["Paediatric & Adolescent HIV"], "last_name": "Oprea"}, {"name": "Victor Daniel Miron", "country": "Romania", "institution": "Carol Davila University / Matei Bals Institute", "city": "Bucharest", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 8, "conferences": [], "roles": ["First author"], "expertise": "Women's HIV care survey", "topics": ["Women, Gender & Pregnancy"], "last_name": "Miron"}, {"name": "Oana Săndulescu", "country": "Romania", "institution": "Matei Bals Institute", "city": "Bucharest", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 12, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Co-author", "Session chair"], "expertise": "HIV testing, guidelines", "topics": ["ART & Treatment"], "last_name": "Săndulescu"}, {"name": "Patrick W.G. Mallon", "country": "Ireland", "institution": "University College Dublin / Mater Misericordiae", "city": "Dublin", "journals": ["HIV Medicine", "Lancet HIV"], "pub_count": 4, "h_index": 35, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Co-author", "EACS Education Head"], "expertise": "HIV cardiovascular/metabolic disease, EACS governing board", "topics": ["Cardiovascular & Metabolic"], "last_name": "Mallon"}, {"name": "Amy Keane", "country": "Ireland", "institution": "Ireland", "city": "Dublin", "journals": [], "pub_count": 1, "h_index": 8, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Speaker", "Presenter"], "expertise": "Breastfeeding & HIV, DRV/c + DTG", "topics": ["Women, Gender & Pregnancy"], "last_name": "Keane"}, {"name": "Fiona Lyons", "country": "Ireland", "institution": "Ireland", "city": "Dublin", "journals": [], "pub_count": 1, "h_index": 12, "conferences": ["EACS 2023"], "roles": ["Session chair", "Speaker"], "expertise": "Breastfeeding session chair", "topics": ["Women, Gender & Pregnancy"], "last_name": "Lyons"}, {"name": "Marius Trøseid", "country": "Norway", "institution": "Oslo University Hospital", "city": "Oslo", "journals": [], "pub_count": 2, "h_index": 22, "conferences": ["Glasgow 2024"], "roles": ["Scientific committee"], "expertise": "Gut-related HIV comorbidities, microbiome", "topics": ["Comorbidities, Ageing & Renal"], "last_name": "Trøseid"}, {"name": "Rigmor C. Berg", "country": "Norway", "institution": "UiT The Arctic University of Norway", "city": "Tromsø", "journals": ["HIV Medicine"], "pub_count": 2, "h_index": 20, "conferences": ["Glasgow 2024"], "roles": ["Invited speaker"], "expertise": "HIV stigma, qualitative research", "topics": ["Stigma, Equity & Access"], "last_name": "Berg"}, {"name": "Mojca Matičič", "country": "Slovenia", "institution": "University Medical Centre Ljubljana", "city": "Ljubljana", "journals": [], "pub_count": 1, "h_index": 16, "conferences": ["EACS 2023"], "roles": ["Speaker"], "expertise": "HCV elimination, HIV/HCV coinfection", "topics": ["Liver & Hepatitis Coinfection"], "last_name": "Matičič"}, {"name": "Ana Planinić", "country": "Croatia", "institution": "Croatia", "city": "Zagreb", "journals": [], "pub_count": 1, "h_index": 8, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "Transmitted drug resistance surveillance", "topics": ["Cohort Studies & Epidemiology", "Drug Resistance & Virology"], "last_name": "Planinić"}, {"name": "Botond Lakatos", "country": "Hungary", "institution": "Hungary", "city": "Budapest", "journals": [], "pub_count": 1, "h_index": 10, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "HIV diagnostics in CEE", "topics": ["Stigma, Equity & Access"], "last_name": "Lakatos"}, {"name": "Deniz Gökengin", "country": "Turkey", "institution": "Ege University", "city": "Izmir", "journals": [], "pub_count": 2, "h_index": 18, "conferences": ["EACS 2023"], "roles": ["Session chair (plenary)"], "expertise": "PrEP/PEP, HIV epidemiology in Turkey", "topics": ["Cohort Studies & Epidemiology", "Prevention, PrEP & Sexual Health"], "last_name": "Gökengin"}, {"name": "Özlem Altuntaş Aydın", "country": "Turkey", "institution": "Istanbul", "city": "Istanbul", "journals": [], "pub_count": 1, "h_index": 12, "conferences": ["Glasgow 2024"], "roles": ["Scientific committee"], "expertise": "HIV clinical care", "topics": ["ART & Treatment"], "last_name": "Aydın"}, {"name": "Maka Gogia", "country": "Georgia", "institution": "Georgia", "city": "Tbilisi", "journals": [], "pub_count": 1, "h_index": 8, "conferences": ["EACS 2023", "EACS 2025"], "roles": ["Session chair"], "expertise": "HIV in CEE/Central Asia, harm reduction", "topics": ["Stigma, Equity & Access"], "last_name": "Gogia"}, {"name": "Dan Turner", "country": "Israel", "institution": "Tel Aviv Sourasky Medical Center", "city": "Tel Aviv", "journals": [], "pub_count": 2, "h_index": 24, "conferences": ["EACS 2023"], "roles": ["Poster presenter"], "expertise": "INSTI resistance mutations", "topics": ["Drug Resistance & Virology"], "last_name": "Turner"}];
+const CCOL = {"UK": "#ef4444", "Switzerland": "#06b6d4", "Denmark": "#f97316", "France": "#3b82f6", "Spain": "#f59e0b", "Germany": "#eab308", "Italy": "#22c55e", "Netherlands": "#10b981", "Belgium": "#a78bfa", "Poland": "#6366f1", "Portugal": "#0ea5e9", "Greece": "#f472b6", "Sweden": "#8b5cf6", "Austria": "#84cc16", "Romania": "#ec4899", "Ireland": "#34d399", "Norway": "#4ade80", "Slovenia": "#c084fc", "Croatia": "#fb923c", "Hungary": "#fbbf24", "Turkey": "#f43f5e", "Georgia": "#2dd4bf", "Israel": "#818cf8"};
+const TCOL = {"ART & Treatment": "#dc2626", "Cohort Studies & Epidemiology": "#2563eb", "Prevention, PrEP & Sexual Health": "#16a34a", "Drug Resistance & Virology": "#7c3aed", "Cardiovascular & Metabolic": "#ea580c", "Women, Gender & Pregnancy": "#db2777", "Liver & Hepatitis Coinfection": "#65a30d", "Stigma, Equity & Access": "#0891b2", "Pharmacology & Drug Interactions": "#6d28d9", "Comorbidities, Ageing & Renal": "#c2410c", "Neurology & Mental Health": "#1d4ed8", "Opportunistic Infections & TB": "#92400e", "HIV Cure & Immunology": "#be185d", "Modelling & Biostatistics": "#065f46", "Paediatric & Adolescent HIV": "#1e3a8a"};
+
+let filtered = [...DATA];
+let currentView = 'table';
+let sortCol = 'last_name';
+let sortDir = 1;
+let activeCountry = '';
+let isMobile = () => window.innerWidth <= 768;
+
+// ── TAGS ─────────────────────────────────────────────
+function jtag(j) {
+  if (j.includes('Lancet HIV')) return '<span class="jtag jtag-l">Lancet HIV</span>';
+  if (j.includes('HIV Medicine')) return '<span class="jtag jtag-h">HIV Med</span>';
+  if (j.includes('Clinical Inf')) return '<span class="jtag jtag-c">Clin ID</span>';
+  return '<span class="jtag">' + j + '</span>';
+}
+function ctag(c) {
+  return '<span class="ctag">' + c.replace(/ 20(\d\d)/, "'\$1") + '</span>';
+}
+function ttag(t) {
+  return '<span class="ttag" style="background:' + (TCOL[t]||'#888') + '">' + t + '</span>';
+}
+function badge(country) {
+  const bg = CCOL[country] || '#888';
+  return '<span class="cbadge" style="background:' + bg + '22;color:' + bg + ';border:1px solid ' + bg + '44">' + country + '</span>';
+}
+
+// ── STATS ─────────────────────────────────────────────
+function updateStats(d) {
+  const ctries = new Set(d.map(r => r.country)).size;
+  const pubs = d.reduce((s, r) => s + r.pub_count, 0);
+  const hs = d.map(r => r.h_index).filter(h => h > 0);
+  const avgH = hs.length ? Math.round(hs.reduce((a,b) => a+b,0) / hs.length) : '—';
+  // desktop sidebar
+  ['stat-n','stat-c','stat-p','stat-h'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = [d.length, ctries, pubs, avgH][i];
+  });
+  // mobile stats
+  ['mob-stat-n','mob-stat-c','mob-stat-p','mob-stat-h'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = [d.length, ctries, pubs, avgH][i];
+  });
+  const rc = document.getElementById('resultCount');
+  if (rc) rc.textContent = d.length + ' researcher' + (d.length !== 1 ? 's' : '');
+}
+
+// ── RENDER ────────────────────────────────────────────
+function renderTable(d) {
+  const noR = document.getElementById('noResults');
+  const tbl = document.getElementById('mainTable');
+  if (!d.length) { noR.style.display='block'; tbl.style.display='none'; return; }
+  noR.style.display='none'; tbl.style.display='table';
+  document.getElementById('tbody').innerHTML = d.map((r, i) => {
+    const parts = r.name.split(' ');
+    const lname = parts[parts.length-1];
+    const fname = parts.slice(0,-1).join(' ');
+    return `<tr>
+      <td class="td-num">${i+1}</td>
+      <td class="td-lname">${lname}</td>
+      <td class="td-fname col-fname">${fname}</td>
+      <td>${badge(r.country)}</td>
+      <td class="col-institution" style="font-size:.73rem;color:#666;max-width:165px;line-height:1.35">${r.institution}</td>
+      <td style="max-width:240px">${(r.topics||[]).map(ttag).join('')}</td>
+      <td class="col-journals">${r.journals.length ? r.journals.map(jtag).join('') : '<span class="empty-cell">—</span>'}</td>
+      <td style="text-align:center"><span class="pval">${r.pub_count}</span></td>
+      <td style="text-align:center"><span class="hval">${r.h_index||'—'}</span></td>
+      <td class="col-conf">${r.conferences.length ? r.conferences.map(ctag).join('') : '<span class="empty-cell">—</span>'}</td>
+      <td class="col-exp exp-cell">${r.expertise}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCards(d) {
+  const cg = document.getElementById('cardGrid');
+  const noR = document.getElementById('noResults');
+  if (!d.length) { noR.style.display='block'; cg.innerHTML=''; return; }
+  noR.style.display='none';
+  cg.innerHTML = d.map(r => {
+    const parts = r.name.split(' ');
+    const lname = parts[parts.length-1];
+    const fname = parts.slice(0,-1).join(' ');
+    const tc = TCOL[(r.topics||[])[0]] || '#ccc';
+    return `<div class="card" style="border-top-color:${tc}">
+      <div class="card-lname">${lname}</div>
+      <div class="card-fname">${fname}</div>
+      <div class="card-inst">${r.institution} · ${r.city}</div>
+      <div class="card-tags">${badge(r.country)}${(r.topics||[]).map(ttag).join('')}</div>
+      <div class="card-tags">${r.journals.map(jtag).join('')}${r.conferences.map(ctag).join('')}</div>
+      <div class="card-bottom">
+        <div class="card-stat"><div class="card-stat-num">${r.pub_count}</div><div class="card-stat-lbl">Articles</div></div>
+        <div class="card-stat"><div class="card-stat-num">${r.h_index||'—'}</div><div class="card-stat-lbl">H-Index</div></div>
+      </div>
+      <div class="card-exp">${r.expertise}</div>
+    </div>`;
+  }).join('');
+}
+
+function render(d) {
+  updateStats(d);
+  updateTopbarActive();
+  if (currentView === 'table') renderTable(d);
+  else renderCards(d);
+}
+
+// ── FILTER ────────────────────────────────────────────
+function applyFilters() {
+  const q = (document.getElementById('searchInput').value ||
+             document.getElementById('mobileSearchInput').value || '').toLowerCase();
+  const topic = document.getElementById('topicFilter').value;
+  const journal = document.getElementById('journalFilter').value;
+  const conf = document.getElementById('confFilter').value;
+
+  ['topicFilter','journalFilter','confFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', !!el.value);
+  });
+
+  filtered = DATA.filter(r => {
+    const txt = !q || [r.name, r.institution, r.expertise, r.city, r.country,
+      ...(r.roles||[]), ...(r.topics||[])].some(f => (f||'').toLowerCase().includes(q));
+    const ctry = !activeCountry || r.country === activeCountry;
+    const tp = !topic || (r.topics||[]).includes(topic);
+    const jrn = !journal || r.journals.includes(journal);
+    const cf = !conf || r.conferences.some(c => c.includes(conf.replace(/ 20\d\d/,'')));
+    return txt && ctry && tp && jrn && cf;
+  });
+
+  const hasFilter = q || topic || journal || conf || activeCountry;
+  const rb = document.getElementById('resetBtn');
+  if (rb) rb.classList.toggle('visible', !!hasFilter);
+  const fb = document.getElementById('filterBtn');
+  if (fb) fb.classList.toggle('has-filters', !!hasFilter);
+
+  sortData();
+}
+
+function syncSearch(val) {
+  document.getElementById('searchInput').value = val;
+  applyFilters();
+}
+
+function syncDrawerFilter(mainId, drawerId) {
+  document.getElementById(mainId).value = document.getElementById(drawerId).value;
+  applyFilters();
+}
+
+// ── COUNTRY ───────────────────────────────────────────
+function toggleCountry(c) {
+  activeCountry = activeCountry === c ? '' : c;
+  const safeId = c.replace(/ /g,'_').replace(/\//g,'_');
+  // update all country rows (sidebar + drawer)
+  document.querySelectorAll('.country-bar-row').forEach(el => el.classList.remove('active'));
+  if (activeCountry) {
+    document.querySelectorAll('#crow-' + safeId).forEach(el => el.classList.add('active'));
+  }
+  // sync drawer select if exists
+  applyFilters();
+}
+
+// ── RESET ─────────────────────────────────────────────
+function resetFilters() {
+  activeCountry = '';
+  ['searchInput','mobileSearchInput'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['topicFilter','journalFilter','confFilter','drawerTopicFilter','drawerJournalFilter','drawerConfFilter'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.querySelectorAll('.country-bar-row').forEach(el => el.classList.remove('active'));
+  ['topicFilter','journalFilter','confFilter'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.classList.remove('active');
+  });
+  applyFilters();
+}
+
+// ── SORT ──────────────────────────────────────────────
+function setSortCol(col) {
+  if (sortCol === col) { sortDir *= -1; }
+  else { sortCol = col; sortDir = (col==='h_index'||col==='pub_count') ? -1 : 1; }
+  // update desktop sort buttons
+  document.querySelectorAll('.sort-btn').forEach(b => {
+    b.classList.remove('sorted');
+    const a = b.querySelector('.arr'); if(a) a.textContent = '↕';
+  });
+  const desktopBtn = document.getElementById('th-' + col);
+  if (desktopBtn) { desktopBtn.classList.add('sorted'); desktopBtn.querySelector('.arr').textContent = sortDir===1?'↓':'↑'; }
+  // update mobile sort buttons
+  document.querySelectorAll('.mob-sort-btn').forEach(b => {
+    b.classList.remove('sorted');
+    b.textContent = b.textContent.replace(/ [↓↑↕]$/,'') + ' ↕';
+  });
+  const mobBtn = document.getElementById('msort-' + col);
+  if (mobBtn) { mobBtn.classList.add('sorted'); mobBtn.textContent = mobBtn.textContent.replace(/ [↓↑↕]$/,'') + (sortDir===1?' ↓':' ↑'); }
+  sortData();
+}
+
+function sortData() {
+  filtered.sort((a, b) => {
+    const va = a[sortCol], vb = b[sortCol];
+    if (typeof va === 'number') return sortDir * (vb - va);
+    return sortDir * (va||'').localeCompare(vb||'');
+  });
+  render(filtered);
+}
+
+// ── VIEW ──────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  document.getElementById('btnTable').classList.toggle('active', v==='table');
+  document.getElementById('btnCard').classList.toggle('active', v==='card');
+  const tbl = document.getElementById('mainTable');
+  const cg = document.getElementById('cardGrid');
+  tbl.style.display = v==='table' ? 'table' : 'none';
+  cg.style.display = v==='card' ? 'grid' : 'none';
+  render(filtered);
+}
+
+function toggleMobileView() {
+  const newView = currentView === 'table' ? 'card' : 'table';
+  document.getElementById('viewToggleBtn').textContent = newView === 'table' ? 'Cards' : 'Table';
+  setView(newView);
+}
+
+// ── DRAWER ────────────────────────────────────────────
+function openDrawer() {
+  document.getElementById('filter-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('filter-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// ── TOPBAR ACTIVE ─────────────────────────────────────
+function updateTopbarActive() {
+  const el = document.getElementById('topbar-active');
+  if (!el) return;
+  const parts = [];
+  if (activeCountry) parts.push(activeCountry);
+  const t = document.getElementById('topicFilter').value;
+  const j = document.getElementById('journalFilter').value;
+  const cf = document.getElementById('confFilter').value;
+  const q = document.getElementById('searchInput').value;
+  if (t) parts.push(t);
+  if (j) parts.push(j);
+  if (cf) parts.push(cf);
+  if (q) parts.push('"' + q + '"');
+  el.textContent = parts.length ? 'Filtered: ' + parts.join(' · ') : '';
+}
+
+// ── INIT ──────────────────────────────────────────────
+applyFilters();
+</script>
+</body>
+</html>
